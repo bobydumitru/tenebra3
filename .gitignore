@@ -1,0 +1,7 @@
+/target
+/wasm-wallet/target/
+/data/
+/.tools/
+/fuzz/target/
+/fuzz/corpus/
+/fuzz/artifacts/

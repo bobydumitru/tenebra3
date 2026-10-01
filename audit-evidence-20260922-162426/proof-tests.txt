@@ -1,0 +1,6 @@
+
+running 14 tests
+ii...........test tsc1_tx_v2::tests::wallet_signs_founder_output_against_mined_ring has been running for over 60 seconds
+.
+test result: ok. 12 passed; 0 failed; 2 ignored; 0 measured; 35 filtered out; finished in 145.24s
+

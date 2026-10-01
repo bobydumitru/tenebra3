@@ -1,0 +1,36 @@
+    Finished `release` profile [optimized] target(s) in 0.21s
+     Running unittests src/lib.rs (target/release/deps/tenebra-8ae71add767947dd)
+
+running 1 test
+test candidate_node::tests::benchmark_sustained_confirmed_tps ... phase=preparing_valid_chain_and_20000_unique_signed_transactions
+fixture_splitting_parents=1 existing_leaves=0
+fixture_splitting_parents=16 existing_leaves=0
+fixture_splitting_parents=256 existing_leaves=0
+fixture_splitting_parents=1061 existing_leaves=3035
+fixture_outputs=20011 history_height=15
+phase=wall_clock_test interval_seconds=30 confirmation_depth=10
+paced_block=1 included=5000 confirmed_workload=0 pending=0 elapsed_seconds=30.32
+paced_block=2 included=5000 confirmed_workload=0 pending=0 elapsed_seconds=60.34
+paced_block=3 included=5000 confirmed_workload=0 pending=0 elapsed_seconds=90.31
+paced_block=4 included=5000 confirmed_workload=0 pending=0 elapsed_seconds=120.38
+paced_block=5 included=0 confirmed_workload=0 pending=0 elapsed_seconds=150.27
+paced_block=6 included=0 confirmed_workload=0 pending=0 elapsed_seconds=180.17
+paced_block=7 included=0 confirmed_workload=0 pending=0 elapsed_seconds=210.16
+paced_block=8 included=0 confirmed_workload=0 pending=0 elapsed_seconds=240.19
+paced_block=9 included=0 confirmed_workload=0 pending=0 elapsed_seconds=270.16
+paced_block=10 included=0 confirmed_workload=0 pending=0 elapsed_seconds=300.20
+paced_block=11 included=0 confirmed_workload=5000 pending=0 elapsed_seconds=330.25
+confirmed_window_tps=166.14
+paced_block=12 included=0 confirmed_workload=10000 pending=0 elapsed_seconds=360.34
+confirmed_window_tps=167.25
+paced_block=13 included=0 confirmed_workload=15000 pending=0 elapsed_seconds=390.24
+confirmed_window_tps=166.64
+paced_block=14 included=0 confirmed_workload=20000 pending=0 elapsed_seconds=420.24
+benchmark_scope=single_local_node_TCP_disk_real_UTC_PoW_ten_successor_confirmations
+steady_confirmation_window_seconds=89.99
+steady_confirmed_tps=166.68 minimum_window_confirmed_tps=166.14
+external_server_tps=NOT_MEASURED public_network_competition=NOT_MEASURED
+ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 61 filtered out; finished in 803.53s
+

@@ -1,0 +1,7 @@
+[Unit]
+Description=TENEBRA TSC-1 v3f health alert
+
+[Service]
+Type=oneshot
+EnvironmentFile=-/etc/tenebra/v3f.env
+ExecStart=/usr/local/sbin/alert-tenebra-v3f TENEBRA v3f healthcheck failed

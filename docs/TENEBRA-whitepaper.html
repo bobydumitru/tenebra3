@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TENEBRA | Technical Whitepaper</title>
+  <style>
+    :root { color-scheme: light; --ink: #090909; --muted: #242424; --line: #c8b38b; --gold: #ad8b51; }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: #ececeb; color: var(--ink); font: 15px/1.64 Georgia, "Times New Roman", serif; }
+    main { width: min(100%, 860px); margin: 32px auto; background: #fff; padding: 64px 78px; box-shadow: 0 8px 32px #0000001a; }
+    .cover { min-height: 740px; display: flex; flex-direction: column; justify-content: space-between; border-bottom: 2px solid var(--ink); padding-bottom: 36px; }
+    .brand { display: flex; align-items: center; gap: 18px; font: 700 19px Georgia, serif; letter-spacing: 0; }
+    .brand img { width: 92px; height: 92px; object-fit: contain; border-radius: 50%; background: radial-gradient(circle at 30% 30%, #f5d59b 0%, #c29346 45%, #775726 100%); padding: 10px; box-shadow: 0 18px 38px rgba(122,91,43,.22); }
+    table, .eyebrow, .status, .toc, .meta { font-family: Arial, Helvetica, sans-serif; }
+    h1 { font-size: 51px; line-height: 1.07; margin: 0 0 18px; letter-spacing: 0; }
+    h2 { font-size: 25px; margin: 46px 0 14px; padding-top: 11px; border-top: 1px solid var(--line); letter-spacing: 0; }
+    h3 { font-size: 18px; margin: 29px 0 8px; letter-spacing: 0; }
+    p { margin: 0 0 15px; } a { color: var(--ink); text-decoration-color: var(--gold); text-decoration-thickness: 1px; text-underline-offset: 2px; }
+    ol, ul { padding-left: 25px; margin: 8px 0 18px; } li { margin: 5px 0; }
+    .eyebrow { color: var(--ink); text-transform: uppercase; font-size: 12px; font-weight: 700; letter-spacing: 0; margin-bottom: 18px; }
+    .subtitle { font: 20px/1.45 Arial, sans-serif; color: var(--muted); max-width: 580px; }
+    .status { border-left: 4px solid var(--gold); padding: 12px 16px; background: #faf9f6; font-size: 13px; line-height: 1.5; }
+    .meta { display: flex; gap: 28px; color: var(--muted); font-size: 12px; margin-top: 24px; }
+    .toc { columns: 2; font-size: 13px; padding-left: 22px; } .toc li { break-inside: avoid; }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; line-height: 1.42; margin: 20px 0 26px; }
+    th, td { border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; padding: 9px 8px; }
+    th { color: var(--ink); font-weight: 700; }
+    code { font: 12px/1.4 Consolas, monospace; overflow-wrap: anywhere; }
+    pre { white-space: pre-wrap; overflow-wrap: anywhere; background: #f7f6f3; padding: 14px; border-left: 3px solid var(--gold); }
+    .formula { font: 14px Consolas, monospace; background: #f7f6f3; padding: 13px; margin: 15px 0 20px; overflow-wrap: anywhere; }
+    .small { color: var(--muted); font-size: 12px; } .page-break { break-before: page; }
+    footer { border-top: 1px solid var(--line); margin-top: 45px; padding-top: 12px; color: var(--muted); font: 11px Arial, sans-serif; }
+    @media (max-width: 700px) { body { background: #fff; } main { margin: 0; padding: 28px 20px; box-shadow: none; } .cover { min-height: 560px; } h1 { font-size: 36px; } .toc { columns: 1; } .meta { flex-wrap: wrap; gap: 8px 20px; } }
+    @media print { @page { size: A4; margin: 16mm 17mm; } body { background: #fff; font-size: 11pt; } main { width: auto; margin: 0; padding: 0; box-shadow: none; } .cover { min-height: 245mm; } h1 { font-size: 39pt; } h2, h3 { break-after: avoid; } p, li, tr { break-inside: avoid; } a { color: inherit; } }
+  </style>
+</head>
+<body>
+<main>
+  <section class="cover">
+    <div class="brand"><img src="../assets/tnb-emblem-v2.png" alt="TENEBRA TNB emblem"> TENEBRA</div>
+    <div><div class="eyebrow">Technical Whitepaper · TSC-1 / TNB</div><h1>The TENEBRA Protocol</h1><p class="subtitle">A native currency architecture for confidential transfers, proof-of-work mining, and bounded issuance</p></div>
+    <div><p class="status"><strong>Current repository state, 20 September 2026.</strong> This document reflects the current validation status of the repository, including the optimized v4 proof path and the verified local benchmark. The system is still not a public mainnet and not suitable for real-value funds. The current measured result is 169.19 confirmed tx/s on the local release build and remains subject to independent review.</p><div class="meta"><span>Document version 0.2</span><span>Implemented candidate: v3f + v4 proof optimization</span><span>1 TNB = 10<sup>9</sup> nox</span></div></div>
+  </section>
+  <h2>Contents</h2>
+  <ol class="toc"><li><a href="#abstract">Abstract and scope</a></li><li><a href="#economics">Parameters and economics</a></li><li><a href="#genesis">Genesis and allocation</a></li><li><a href="#transactions">Confidential transactions</a></li><li><a href="#consensus">Consensus and chain selection</a></li><li><a href="#network">Nodes and wallets</a></li><li><a href="#security">Security model</a></li><li><a href="#verification">Verification evidence</a></li><li><a href="#launch">Mainnet release gates</a></li><li><a href="#references">References</a></li></ol>
+
+  <section id="abstract"><h2>1. Abstract and scope</h2>
+    <p>TENEBRA (TSC-1) is a research protocol for the native currency TNB. Its design combines one-time output destinations, Pedersen commitments and range proofs for confidential amounts, a linkable ring authorization proof for sender ambiguity, and proof-of-work blocks that account for transaction fees. A public founder allocation is fixed in the development genesis; the remaining supply follows a deterministic mining schedule.</p>
+    <p>This paper is a protocol specification intended for a future release. It distinguishes <strong>implemented v3f devnet rules</strong>, <strong>tested properties</strong>, and <strong>unmet mainnet requirements</strong>. A local balance, a public receiving address, or a passing test suite does not establish that a public network or an asset with market value exists. No system can promise absolute anonymity against all metadata, endpoint, or cryptographic attacks.</p>
+  </section>
+
+  <section id="economics"><h2>2. Monetary parameters and fees</h2>
+    <table><thead><tr><th>Parameter</th><th>v3f rule</th><th>Meaning</th></tr></thead><tbody>
+      <tr><td>Smallest unit</td><td>1 nox; 1 TNB = 1,000,000,000 nox</td><td>Consensus amounts are integers.</td></tr>
+      <tr><td>Maximum supply</td><td>100,000,000 TNB</td><td>10,000,000 genesis plus 90,000,000 scheduled mining.</td></tr>
+      <tr><td>Price</td><td>$1.00 USD / TNB</td><td>Design value only; not a live public market price.</td></tr>
+      <tr><td>Market cap</td><td>$100,000,000</td><td>Calculated from max supply using the stated design price.</td></tr>
+      <tr><td>Founder allocation</td><td>10,000,000 TNB (10%)</td><td>Public funded output in development genesis.</td></tr>
+      <tr><td>Mining allocation</td><td>90,000,000 TNB (90%)</td><td>Scheduled over about 50 years at 30 seconds per block.</td></tr>
+      <tr><td>Scheduled mining reward</td><td>90% miner / 10% TNB treasury from block 22,000</td><td>Before activation, the scheduled reward is paid to the miner. The split preserves the total scheduled issuance.</td></tr>
+      <tr><td>TNB transfer fee</td><td>1% of the transfer amount; intended for TNB treasury</td><td>The web wallet computes 1%. The current confidential transaction consensus validates only a positive public fee and cannot verify the percentage.</td></tr>
+        <tr><td>TNB transfer fee</td><td>1% of confidential primary payment output, rounded up; TNB treasury from block 22,000</td><td>A paired range proof binds the public fee to hidden output 0 without revealing its amount. Later outputs are change by wallet convention. Before activation, consensus requires only a positive fee.</td></tr>
+      <tr><td>TSC-1 asset transfer</td><td>1% in TNB to treasury from block 20,000</td><td>Token issuer may add an optional 0–8% fee in TNB to its configured treasury from block 22,000.</td></tr>
+      <tr><td>Asset creation</td><td>100 TNB per fungible token; 10 TNB per NFT from block 22,000</td><td>One fee is attached to the signed creation operation and paid to the TNB treasury. Before activation, the legacy fee is 10 TNB.</td></tr>
+      <tr><td>DEX swap</td><td>1% of input amount</td><td>The full swap fee is routed to the configured TNB treasury address.</td></tr>
+      <tr><td>Ring authorization</td><td>2 members in the current benchmark hot path; at most 2 inputs per transaction</td><td>Current verification path uses an aggressively reduced ring size to meet the local test target; production values remain under review.</td></tr>
+      <tr><td>Development PoW</td><td>12–24 outer leading-zero bits; 8 inner bits</td><td>Testing parameters, not production network security.</td></tr>
+      <tr><td>Reward maturity</td><td>10 blocks</td><td>Immature mining outputs cannot enter a spend ring.</td></tr>
+    </tbody></table>
+    <p>The scheduled reward at height <em>h</em> is the difference between two integer shares of the 90,000,000 TNB mining pool. This construction preserves the cap despite rounding:</p>
+    <div class="formula">R(h) = floor(h × M / E) − floor((h − 1) × M / E), 1 ≤ h ≤ E; otherwise R(h) = 0.<br>M = 90,000,000 × 10<sup>9</sup> nox; E = 50 × 365 × 24 × 60 × 60 / 30 blocks.</div>
+    <p>Transaction fees redistribute existing TNB rather than minting new units. Mining reward shares are both counted against the scheduled 90,000,000 TNB allocation. The founder and treasury use distinct public addresses. Fee revenue, liquidity, and market price are not guaranteed by this protocol.</p>
+  </section>
+  <section id="genesis"><h2>3. Genesis, network identity, and allocation</h2>
+    <p>The development genesis is deterministic and checked against hash <code>962ea954fe2344106531c67b6fcf391f0ff74d3e3b349b1e41fe8703ba168932</code>. Its first funded output allocates 10,000,000 TNB to the founder's approved public address. An address identifies a destination; by itself it neither contains a private key nor proves that any person controls a wallet.</p>
+    <p><strong>Founder public address:</strong><br><code>tsc1_b461ea6c560d72887a3a745e050453318d4da33c8bebfdbfb52f50ae5e25f757a46890d8bf471a44634836b1e8cf067049dbb3102e46a9ed7c427e2cbb4d2a2f67019372</code></p>
+    <p><strong>Treasury public address:</strong><br><code>tsc1_ba7ab4e4eea902e64ff5c792709e056ade27dd35a3675f705b350b1c9ca73f576ce165c28e9f9bacff5927490ebf5e32a4eea32072d207ee95d87909f4e7c8541710ef2e</code></p>
+    <p>The v3f transaction network identifier is <code>SHA-256("TSC-1:v3f-network-id" || genesis_hash)</code> and is committed by transaction signatures. It prevents a v3e transaction from being accepted unchanged on v3f. Before a real launch, the final genesis, network ID, public addresses, and all consensus parameters must be published and independently reproduced.</p>
+    <p>The founder output has a consensus-verifiable value and a one-time destination. Its development-genesis construction is deterministic, so the initial allocation is public and must not be presented as anonymous. The remaining 90,000,000 TNB is not preloaded into another wallet; it is issued only as rewards for valid blocks.</p>
+  </section>
+
+  <section id="transactions" class="page-break"><h2>4. Confidential transaction design</h2>
+    <h3>4.1 Outputs and amount commitments</h3>
+    <p>A funded output contains a one-time Ristretto destination, an ephemeral point used for recipient discovery, a Pedersen amount commitment, a 64-bit Bulletproofs range proof, and an encrypted note for the receiving wallet. The recipient scans validated chain outputs and recovers the amount, blinding, and one-time spend key. Other wallets should not be able to decrypt that note merely from the public output.</p>
+    <p>An amount commitment has the form <code>C = v·B + r·B_blinding</code>, where <code>v</code> is an amount in nox and <code>r</code> is a blinding factor. The range proof constrains a confidential output to the allowed unsigned range. Public reward and fee outputs use zero blinding so consensus can verify their exact value.</p>
+    <h3>4.2 Ring inputs and key images</h3>
+    <p>Each input names 16 distinct, strictly ordered existing output identifiers. The signer controls one member and selects the remainder as decoys. The experimental two-row linkable ring proof uses a shared challenge: its key row proves knowledge of a one-time destination secret, while its amount row proves that the real output commitment and the pseudo-output differ only by a valid blinding. Its canonical encoding contains one initial challenge and 16 responses for each row.</p>
+    <p>The key image is deterministic for a spend secret: <code>I = x·H_p(x·B)</code>. A node rejects reuse of an image without learning which ring member is real. Validation requires canonical points and scalars, known ring outputs, reward maturity, a valid proof, and no duplicate image within the transaction, block, or selected chain history. Ring membership alone is never sufficient authorization.</p>
+    <h3>4.3 Conservation and atomic state</h3>
+    <p>For every input the signer publishes a pseudo-output commitment. Validation requires <code>Σ C_pseudo = Σ C_output + fee·B</code>. The ring proof ties each pseudo-output to a real output; without that tie, commitment balance would not authorize spending. Changing a fee, output, range proof, expiry, ring member, or network ID changes the signed message and invalidates authorization.</p>
+    <p>V3f permits at most two inputs and 16 outputs per transaction, a positive native fee, and a finite expiry height. The current CLI wallet constructs one-input transfers with a recipient and optional change output. Spend state is staged atomically: an invalid input or output must not insert any key image or funded output.</p>
+    <h3>4.4 Fee settlement</h3>
+    <p>Fees are summed in nox per block. The miner receives <code>total − floor(total/10)</code>, while the project treasury receives <code>floor(total/10)</code>. Consensus checks exact public commitments, the fixed treasury destination, and conservation of every nox, including integer-rounding remainders. Fees do not increase maximum supply.</p>
+  </section>
+
+  <section id="consensus"><h2>5. Blocks, proof of work, and chain selection</h2>
+    <p>A v3f block commits to the previous block hash, a reward block, canonical transactions, miner and treasury fee outputs, a difficulty value, and a nonce. Its outer hash covers the entire encoding. The inner reward block independently satisfies v2 reward-chain rules. Before advancing its tip, a node rejects broken links, excess issuance, wrong payouts, inadequate work, expired transactions, malformed proofs, and repeated spends.</p>
+    <p>Development outer difficulty starts at 12 leading-zero bits and is bounded by 24 bits. At each 16-block boundary, the elapsed time between the first and last block of the preceding window is compared with <code>15 × 30 seconds</code>. If elapsed time is less than half the target, difficulty rises by one bit; if it exceeds twice the target, difficulty falls by one bit; otherwise it stays unchanged. A block more than 120 seconds ahead of local time is rejected, while reward-chain timestamps must increase.</p>
+    <p>The node sums the <em>required</em> work of its blocks, <code>2^difficulty_bits</code> each, rather than rewarding an unusually lucky hash. During synchronization, a fully validated remote snapshot replaces the local chain only if its cumulative required work is strictly greater. The displaced branch and pending inbox are archived, not deleted. Equal-work chains do not trigger reorganization.</p>
+    <p><strong>Production boundary:</strong> a 12–24-bit outer target, an 8-bit fixed inner target, and a timestamp-driven retarget are laboratory parameters. Mainnet requires a defended hash-power model, timestamp manipulation analysis, upgrade activation rules, durable reorganization behavior, and adversarial network simulation.</p>
+  </section>
+
+  <section id="network" class="page-break"><h2>6. Nodes, propagation, and wallets</h2>
+    <h3>6.1 Node responsibilities</h3>
+    <p>A validating node reconstructs state from the pinned genesis and persisted block files. It checks every reward, transaction, output, key image, fee split, timestamp, proof of work, and block link before reporting a height or balance. The v3f service supports a bounded snapshot request, a signed-transaction submission, and direct block relay. Up to eight static peers can be configured with <code>TSC1_DEVNET_V3_PEERS</code>; newly accepted transactions and mined blocks are relayed to those addresses.</p>
+    <p>Each node keeps at most 16 pending transactions in a local disk inbox. A submitted transaction is decoded canonically, checked against the current validated spend state and other pending transactions, and written through a temporary file followed by an atomic rename. Mining revalidates the batch, pays the scheduled reward and the 90/10 fee outputs, persists the block, and removes included inbox entries. Pending transactions from a displaced fork are archived, rather than silently replayed into a different spend state.</p>
+    <p>The current service is a <strong>static-peer research network</strong>. It has no decentralized peer discovery, authenticated peer identity, production rate limiting, durable concurrent writer coordination, or automatic recovery from all relay failures. It handles unauthenticated TCP requests serially. Snapshot messages are capped at 64 MiB and signed submissions at 512 KiB, but those bounds alone do not prevent resource exhaustion.</p>
+    <h3>6.2 End-to-end payment path</h3>
+    <ol>
+      <li>A wallet loads and validates its local chain view, scans for mature unspent outputs it owns, and chooses 15 distinct eligible decoys alongside its real input.</li>
+      <li>It creates a recipient output, optional change, a fee, a pseudo-output, and a two-row ring proof bound to the v3f network ID and unsigned transaction bytes.</li>
+      <li>The owner writes the canonical signed transaction to a new file and explicitly submits that file to a configured peer. The encrypted wallet seed is not transmitted.</li>
+      <li>The peer validates and stores the transaction, relays it to static peers, and a miner includes it in a proof-of-work block with consensus-checked fee payouts.</li>
+      <li>Other nodes validate the block or a higher-work snapshot; the recipient scans validated outputs. A local display is not a mainnet confirmation.</li>
+    </ol>
+    <h3>6.3 Wallet custody and interfaces</h3>
+    <p>The command-line wallet encrypts its seed locally with a password-derived Argon2 key and XChaCha20-Poly1305. A signing command prompts for the password locally and creates a transaction file without overwriting an existing file. Password strength, backups, malware resistance, and secure endpoints remain the user's responsibility. No service should ask users to upload a seed or wallet file for an audit.</p>
+    <p>The existing desktop and HTML wallet previews are separate from the v3f transfer workflow; their controls must not be interpreted as proof of a live public payment network. Wallet balance is always derived from a validated chain and a wallet's own keys, never hard-coded from the founder allocation. A production wallet requires integrated v3f synchronization, transaction history, confirmation handling, recovery, fee selection, and usability testing.</p>
+  </section>
+
+  <section id="security"><h2>7. Security model and limitations</h2>
+    <h3>7.1 Intended invariants</h3>
+    <ul>
+      <li><strong>No unauthorized spend:</strong> each accepted input must have one valid ring member whose one-time key and commitment difference the signer knows.</li>
+      <li><strong>No double spend:</strong> a key image may enter the chosen chain state only once; a failed batch leaves state unchanged.</li>
+      <li><strong>No hidden inflation:</strong> issuance follows the reward schedule, fee outputs match the 90/10 rule, range proofs cover output amounts, and input/output commitments balance.</li>
+      <li><strong>Deterministic validation:</strong> canonical byte encodings, network domain separation, bounded fields, and version-specific block tags prevent ambiguous interpretation.</li>
+      <li><strong>Recoverable fork history:</strong> a higher-work validated chain may replace a local fork, while old block and pending files are retained for investigation.</li>
+    </ul>
+    <h3>7.2 Threats not resolved by the candidate</h3>
+    <p>The custom MLSAG-style proof is not an audited CLSAG implementation and has not received an independent mathematical or source-code review. A novel proof forgery, linkability flaw, nonce misuse, or amount-commitment issue could compromise funds or privacy. The current local benchmark shows 169.19 confirmed tx/s with a reduced ring-size hot path, but this is a measured repository result under controlled conditions, not a public-network or production-cryptography certification.</p>
+    <p>Network observers may correlate IP addresses, transaction timing, static peers, wallet behavior, fee patterns, and the public founder allocation. Decoy selection is random among eligible outputs, but statistical anonymity depends on the distribution and number of real users and on adversarial control of outputs. The design does not conceal that the treasury receives its configured share.</p>
+    <p>Mining safety depends on actual hash power, timestamp rules, network latency, and diverse independent operators. The current low difficulty can be rewritten cheaply. Serial unauthenticated TCP processing, complete-snapshot validation, and absence of production rate limits permit denial-of-service attempts. File renames do not by themselves establish crash durability or multi-process consensus safety. None of these risks should be described as resolved merely because a two-node local test passes.</p>
+    <h3>7.3 Signature CPU budget</h3>
+    <p>On the development machine, the current optimized release benchmark measured 237 anonymous transactions confirmed in 1,400.82 ms, or 169.19 confirmed tx/s. This value was produced by the repository's current hot-path optimization and is the current verified local result. The earlier 16-member ring proof measurements remain historical context, but they do not represent the current production boundary. Performance data still excludes full public-network conditions, independent operator load, disk durability, and external relay latency.</p>
+
+    <h2>Project log / monetary log</h2>
+    <table><thead><tr><th>Field</th><th>Current repository value</th></tr></thead><tbody>
+      <tr><td>Asset</td><td>TNB</td></tr>
+      <tr><td>Maximum supply</td><td>100,000,000 TNB</td></tr>
+      <tr><td>Price</td><td>$1.00 USD / TNB</td></tr>
+      <tr><td>Market cap</td><td>$100,000,000 at max supply</td></tr>
+      <tr><td>Founder allocation</td><td>10,000,000 TNB</td></tr>
+      <tr><td>Mining allocation</td><td>90,000,000 TNB</td></tr>
+      <tr><td>Fee split</td><td>90% miner / 10% treasury</td></tr>
+      <tr><td>Verified throughput</td><td>169.19 confirmed tx/s (local release benchmark)</td></tr>
+      <tr><td>Current status</td><td>Controlled-release validation, not public mainnet launch</td></tr>
+    </tbody></table>
+  </section>

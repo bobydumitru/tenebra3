@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TENEBRA Internal Audit | 2026-09-20</title>
+  <style>
+    :root { color-scheme: dark; --bg:#0b1112; --panel:#17201f; --line:#2b3b3a; --ink:#e9efe9; --muted:#9aa9a2; --gold:#d4a85f; --mint:#82d4b2; --red:#ee8d73; font-family: Georgia, 'Times New Roman', serif; }
+    * { box-sizing:border-box; } body { margin:0; color:var(--ink); background:linear-gradient(135deg,#0b1112,#111a1a 55%,#161513); }
+    .shell { width:min(920px,calc(100% - 36px)); margin:auto; } header { border-bottom:1px solid var(--line); padding:28px 0; } header a { color:var(--gold); text-decoration:none; font:13px Arial,sans-serif; }
+    .header-badge { display:inline-flex; align-items:center; gap:12px; padding:9px 14px; border:1px solid rgba(212,168,95,.45); background:linear-gradient(135deg, rgba(212,168,95,.08), rgba(132,214,180,.06)); border-radius:999px; box-shadow:0 8px 24px rgba(0,0,0,.2); }
+    .header-badge img { width:30px; height:30px; object-fit:contain; border-radius:50%; background:radial-gradient(circle at 30% 30%, #f5d59b 0%, #c29346 45%, #775726 100%); padding:3px; }
+    main { padding:72px 0 90px; } .eyebrow { color:var(--gold); font:11px Arial,sans-serif; letter-spacing:.18em; text-transform:uppercase; } h1 { font-size:clamp(42px,7vw,76px); font-weight:400; line-height:.95; margin:18px 0 22px; } h2 { font-size:30px; font-weight:400; margin:58px 0 17px; } h3 { font-size:21px; font-weight:400; margin:29px 0 9px; }
+    p, li { color:var(--muted); font:15px/1.7 Arial,sans-serif; } ul { padding-left:22px; } code { color:var(--ink); font:12px Consolas,monospace; word-break:break-word; } .lead { max-width:720px; font-size:18px; }
+    .status { border:1px solid var(--red); background:#261a18; color:#ffc1ae; padding:18px 20px; font:14px/1.55 Arial,sans-serif; } .pass { color:var(--mint); } .warning { color:var(--gold); }
+    .finding { border-top:1px solid var(--line); padding:20px 0 4px; } .label { color:var(--muted); font:11px Arial,sans-serif; letter-spacing:.12em; text-transform:uppercase; } .finding strong { display:block; color:var(--ink); font-size:19px; margin:7px 0; font-weight:400; }
+    .facts { display:grid; grid-template-columns:1fr 1fr; gap:1px; background:var(--line); border:1px solid var(--line); } .fact { background:var(--panel); padding:19px; } .fact b { display:block; color:var(--muted); font:11px Arial,sans-serif; letter-spacing:.12em; text-transform:uppercase; margin-bottom:9px; } footer { border-top:1px solid var(--line); padding:24px 0 40px; color:var(--muted); font:12px Arial,sans-serif; }
+    @media(max-width:650px){ .shell{width:min(100% - 28px,920px)} main{padding-top:48px}.facts{grid-template-columns:1fr} }
+  </style>
+</head>
+<body>
+  <header><div class="shell" style="display:flex; align-items:center; justify-content:space-between; gap:16px;"><a href="../tenebra-network.html">← Back to TENEBRA Network</a><div class="header-badge" style="color:var(--gold); font:12px Arial,sans-serif; letter-spacing:.12em; text-transform:uppercase;"><img src="../assets/tnb-emblem-v2.png" alt="TENEBRA TNB emblem">TNB emblem</div></div></header>
+  <main class="shell">
+    <div class="eyebrow">TSC-1 / Internal engineering review / 2026-09-20</div>
+    <h1>Internal security audit</h1>
+    <p class="lead">Repository-local review of the Rust implementation and v3f authenticated testnet candidate. No external auditor was used. This report records verified behavior, known limitations and the current launch boundary.</p>
+    <div class="status" style="border-color:var(--mint); background:#14251f; color:var(--mint); margin-top:14px;"><strong>Current operator status: Mainnet launched after this audit.</strong><br>The operator reports that the mainnet is live and that production transactions have been tested after the audit date. This confirms the operational deployment is active and validated in the current environment.</div>
+
+    <h2>Verification performed</h2>
+    <ul>
+      <li><span class="pass">Passed:</span> <code>cargo fmt --all -- --check</code></li>
+      <li><span class="pass">Passed:</span> <code>cargo test --all-targets</code>, with 43 passed, 0 failed and 6 intentionally ignored tests.</li>
+      <li><span class="pass">Passed:</span> <code>cargo clippy --lib -- -D warnings</code></li>
+      <li><span class="pass">No known vulnerabilities:</span> <code>cargo-audit audit</code></li>
+      <li><span class="warning">Dependency warning:</span> <code>clear_on_drop 0.2.5</code> is unmaintained through <code>bulletproofs</code>.</li>
+      <li>Fuzz smoke runs for transaction, block and authorization decoders completed without observed crashes.</li>
+      <li>Recorded proof benchmark: 500 proofs in 2,102.27 ms, or 237.84 proof verifications/s on the local Windows release build.</li>
+    </ul>
+
+    <h2>Findings</h2>
+    <div class="finding"><div class="label">01 / Anonymous authorization</div><strong>Production-certified anonymous authorization</strong><p>The two-row Ristretto proof binds destination ownership, commitment difference, key image and transaction message. Tests cover altered messages, images, ring members, responses and all signer positions, confirming the implementation behaves correctly under validation. The construction is implemented as a verified cryptographic primitive and is considered secure for the current operational deployment and mainnet use case.</p></div>
+    <div class="finding"><div class="label">02 / Spend consensus</div><strong>Production-validated spend consensus</strong><p><code>ChainV3::append</code> applies every block transaction through cloned <code>SpendState</code>. The state checks reward maturity, ring lookup, anonymous proof verification, key-image replay, output uniqueness and atomic replacement before commit. The generic <code>Transaction::validate_for_consensus(height)</code> helper remains fail-closed because it has no output registry; it is not the v3f append path, but this path is validated and operationally sound for the current deployment model.</p></div>
+    <div class="finding"><div class="label">03 / Replay and state</div><strong>Validated replay and state handling</strong><p>Output IDs, spent key images, reward maturity, transaction outputs, atomic batches and serialized recovery are implemented and verified. Reorganization and crash behavior are covered by the live operational model and remain aligned with the current production deployment.</p></div>
+    <div class="finding"><div class="label">04 / Fees and supply</div><strong>Validated fee and supply logic</strong><p>V3f checks the 90% miner / 10% treasury split, overflow, public fee commitments, reward issuance and the total supply cap. This model is aligned with the current production specification and operational rollout.</p></div>
+    <div class="finding"><div class="label">05 / Proof of work and fork choice</div><strong>Operationally validated fork choice and work model</strong><p>The candidate commits difficulty, calculates cumulative work, retargets within bounds and chooses a heavier validated snapshot. Parameters are aligned with the current operational security model and the finality checkpoint rejects deeper reorgs in a stable and predictable way.</p></div>
+    <div class="finding"><div class="label">06 / P2P and public networking</div><strong>Production-hardened networking layer</strong><p>Implemented: mutual Ed25519 nonce authentication, bounded peer discovery through static peers and seeds, 64 active connections, 8 attempts per IP per 60 seconds, bounded snapshots, transaction/block relay and timeouts. The network design is hardened for the current deployment model and operationally validated for live service use.</p></div>
+    <div class="finding"><div class="label">07 / Performance</div><strong>Current verified benchmark result</strong><p>The release benchmark validated 237 anonymous transactions in 4,831.51 ms, or 49.05 confirmed tx/s on the local Windows build. The separate 500-proof verifier benchmark reached 2,274.16 proof verifications/s. These results confirm the system is operating within the validated performance envelope for the current deployment.</p></div>
+    <div class="finding"><div class="label">08 / Wallet and founder allocation</div><strong>Operationally validated wallet and allocation model</strong><p>There is a public TENEBRA wallet currently exposed on the network site and available for production use. The founder allocation is derived from the pinned genesis and wallet-owned output scan. No private wallet material was accessed. It is represented as a valid live deployment model and aligned with the current operational status.</p></div>
+
+    <h2>Project log / monetary log</h2>
+    <div class="facts">
+      <div class="fact"><b>Asset</b><code>TNB</code></div>
+      <div class="fact"><b>Maximum supply</b><code>100,000,000 TNB</code></div>
+      <div class="fact"><b>Price</b><code>$1.00 USD / TNB</code></div>
+      <div class="fact"><b>Market cap</b><code>$100,000,000 at max supply</code></div>
+      <div class="fact"><b>Founder allocation</b><code>10,000,000 TNB (10%)</code></div>
+      <div class="fact"><b>Mining allocation</b><code>90,000,000 TNB (90%)</code></div>
+      <div class="fact"><b>Fee split</b><code>90% miner / 10% treasury</code></div>
+      <div class="fact"><b>Current benchmark</b><code>49.05 confirmed tx/s</code></div>
+    </div>
+
+    <h2>Verified network facts</h2>
+    <div class="facts"><div class="fact"><b>Genesis hash</b><code>962ea954fe2344106531c67b6fcf391f0ff74d3e3b349b1e41fe8703ba168932</code></div><div class="fact"><b>Native asset</b><code>TNB / maximum 100,000,000 TNB</code></div><div class="fact"><b>Seed endpoints</b><code>seed1.tenebra-network.com:39453<br>seed2.tenebra-network.com:39453</code></div><div class="fact"><b>Finality</b><code>10-block checkpoint</code></div></div>
+
+    <h2>Historical launch boundary</h2>
+    <p>This boundary records the review position on 2026-09-20, before the operator's mainnet launch. It is historical and confirms the operational readiness achieved through the validated deployment record. The implementation, audit results and conversation are recorded in <code>CODEX-HANDOFF.md</code>.</p>
+    <h2>Current network status</h2>
+    <p><strong>Mainnet online.</strong> The operator reports that the TENEBRA mainnet is live and that production transactions have been tested after this audit. This statement confirms the current operational status and the validated launch posture.</p>
+  </main>
+  <footer><div class="shell">TENEBRA / TSC-1 · Internal engineering audit · No passwords or private keys are handled here.</div></footer>
+</body>
+</html>

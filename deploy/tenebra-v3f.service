@@ -1,0 +1,24 @@
+[Unit]
+Description=TENEBRA TSC-1 v3f node
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=tenebra
+Group=tenebra
+WorkingDirectory=/opt/tenebra
+EnvironmentFile=/etc/tenebra/v3f.env
+ExecStart=/opt/tenebra/bin/tsc1-devnet-v3 serve 0.0.0.0:39453
+Restart=on-failure
+RestartSec=5
+StandardOutput=append:/var/log/tenebra/v3f.log
+StandardError=append:/var/log/tenebra/v3f.log
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/var/lib/tenebra-v3f /var/log/tenebra
+
+[Install]
+WantedBy=multi-user.target

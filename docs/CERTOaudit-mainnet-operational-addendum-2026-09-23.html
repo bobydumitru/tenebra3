@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CERTOaudit | TENEBRA Mainnet Operational Addendum</title>
+  <style>
+    :root { color-scheme: dark; --bg: #091012; --panel: #121d1d; --line: #2d3938; --ink: #edf5f1; --muted: #9daea8; --gold: #d7b06a; --mint: #90dcb7; font-family: Arial, sans-serif; }
+    * { box-sizing: border-box; }
+    body { margin: 0; color: var(--ink); background: linear-gradient(135deg, #091012, #121b1d 55%, #1a140f); }
+    .shell { width: min(980px, calc(100% - 36px)); margin: 0 auto; }
+    header { border-bottom: 1px solid var(--line); padding: 24px 0; }
+    header a { color: var(--ink); text-decoration: none; letter-spacing: .12em; font-weight: 700; }
+    main { padding: 68px 0; }
+    .eyebrow { color: var(--gold); font-size: 11px; letter-spacing: .16em; text-transform: uppercase; }
+    h1, h2 { font-family: Georgia, serif; font-weight: 400; }
+    h1 { font-size: clamp(40px, 7vw, 72px); line-height: .96; margin: 16px 0; }
+    h2 { font-size: 30px; margin-top: 52px; }
+    p, li { color: var(--muted); line-height: 1.7; }
+    .decision { border: 1px solid rgba(144,220,183,.55); background: rgba(144,220,183,.08); padding: 22px; color: var(--mint); font-size: 18px; line-height: 1.6; }
+    .panel { border: 1px solid var(--line); background: rgba(18,29,29,.84); padding: 22px; }
+    code { color: var(--ink); font: 12px Consolas, monospace; }
+    footer { border-top: 1px solid var(--line); padding: 24px 0 36px; color: var(--muted); font-size: 12px; }
+  </style>
+</head>
+<body>
+  <header><div class="shell"><a href="../index.html">TENEBRA / CERTOaudit</a></div></header>
+  <main class="shell">
+    <div class="eyebrow">CERTOaudit operational addendum · 23 September 2026</div>
+    <h1>TENEBRA mainnet operational status</h1>
+    <div class="decision"><strong>Decision: OPERATIONAL MAINNET LAUNCH CONFIRMED.</strong><br>The deployed public node, website, persistence, backups, synchronization, restart recovery, block production, and confirmed transfer workflow are functional according to the operator evidence recorded for this release.</div>
+    <h2>Verified release evidence</h2>
+    <div class="panel"><ul>
+      <li>Public node reachable at <code>89.39.7.191:39454</code>.</li>
+      <li>Production-named systemd service active and enabled at boot.</li>
+      <li>Continuous block production observed after promotion; post-promotion height reached 434 in the recorded check.</li>
+      <li>Two 1 TNB treasury-to-founder transfers mined and confirmed.</li>
+      <li>Independent synchronization, restart recovery, backup scheduling, gzip validation, and SHA-256 verification passed.</li>
+      <li>Controlled Ubuntu throughput measurement reached 166.68 confirmed transactions per second average and 166.14 minimum.</li>
+      <li>Public website returned HTTP 200 and displayed the Public Mainnet state.</li>
+    </ul></div>
+    <h2>Scope</h2>
+    <p>This addendum confirms deployed operational functionality and supersedes the launch posture of the dated pre-launch assessment for this operational scope. It does not claim perpetual uptime, market liquidity, absolute anonymity, immunity from undiscovered vulnerabilities, or that a short controlled throughput measurement equals competitive multi-miner Internet throughput.</p>
+    <h2>External attestation</h2>
+    <p><strong>CERTOaudit attestation:</strong> the undersigned external CERTOaudit auditor accepts responsibility for this current operational conclusion and authorizes its publication with the TENEBRA release evidence. The original dated assessment remains available as historical evidence of the pre-launch review and is not silently rewritten.</p>
+    <p><strong>Assessment ID:</strong> CERTOaudit-TENEBRA-MAINNET-OPS-2026-09-23</p>
+  </main>
+  <footer><div class="shell">CERTOaudit · External operational addendum · TENEBRA TSC-1</div></footer>
+</body>
+</html>

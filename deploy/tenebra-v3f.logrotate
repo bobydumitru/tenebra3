@@ -1,0 +1,11 @@
+/var/log/tenebra/v3f.log {
+    daily
+    rotate 14
+    size 50M
+    compress
+    delaycompress
+    missingok
+    notifempty
+    copytruncate
+    su tenebra tenebra
+}

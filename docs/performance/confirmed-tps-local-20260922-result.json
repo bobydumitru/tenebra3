@@ -1,0 +1,22 @@
+{
+  "date": "2026-09-22",
+  "scope": "controlled single local node; paced mining; TCP, disk, real UTC, PoW and ten successor confirmations",
+  "transactions": 20000,
+  "steady_confirmation_window_seconds": 90.12,
+  "steady_confirmed_tps": 166.44,
+  "minimum_window_confirmed_tps": 166.32,
+  "target_tps": 150,
+  "local_gate_passed": true,
+  "disk_reload_passed": true,
+  "public_mainnet_verified": false,
+  "server_tps_measured": false,
+  "proof_construction_in_timed_section": false,
+  "source_manifest": "confirmed-tps-local-20260922-source.json",
+  "source_archive": "confirmed-tps-local-20260922-source.zip",
+  "raw_log": "confirmed-tps-local-20260922.log",
+  "limitations": [
+    "Four workload blocks and ten successors; short steady measurement after warm-up.",
+    "Initial low PoW difficulty 12; deliberately paced miner; no public competition.",
+    "Does not establish anonymity strength or long-running capacity."
+  ]
+}

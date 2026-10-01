@@ -1,0 +1,49 @@
+﻿<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TENEBRA Wallet - Preview</title>
+  <style>
+    :root { color-scheme: dark; font-family: Inter, Segoe UI, Arial, sans-serif; background: #08090c; color: #f3eee4; }
+    * { box-sizing: border-box; }
+    body { margin: 0; min-height: 100vh; display: grid; place-items: center; padding: 24px; background: radial-gradient(circle at 50% 10%, #292216 0, #101014 38%, #08090c 75%); }
+    main { width: min(100%, 440px); border: 1px solid #6c542b; border-radius: 28px; background: linear-gradient(145deg, #202026, #0e0f13 70%); box-shadow: 0 24px 80px #000a; padding: 30px; }
+    header { display: flex; justify-content: space-between; align-items: center; color: #c7aa6c; font-size: 13px; letter-spacing: .18em; font-weight: 700; }
+    .pill { border: 1px solid #725a2e; border-radius: 100px; padding: 7px 10px; color: #ddc893; letter-spacing: .05em; font-weight: 500; }
+    .coin { display: block; width: 210px; height: 210px; object-fit: contain; margin: 24px auto 10px; filter: drop-shadow(0 14px 24px #0008); }
+    h1 { margin: 0; text-align: center; font-size: 28px; letter-spacing: .08em; }
+    .sub { text-align: center; color: #a39b8c; margin: 7px 0 30px; font-size: 13px; }
+    .card { border: 1px solid #494032; background: #17171a; border-radius: 17px; padding: 20px; margin-top: 14px; }
+    .label { color: #bbaa87; font-size: 12px; letter-spacing: .12em; text-transform: uppercase; }
+    .value { margin: 9px 0 0; font-size: 25px; font-weight: 650; }
+    .muted { color: #a5a09a; font-size: 13px; line-height: 1.5; }
+    .actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 18px; }
+    button { border: 1px solid #695838; background: #25221b; color: #998d74; border-radius: 12px; padding: 13px; font-size: 14px; cursor: not-allowed; }
+    footer { margin-top: 24px; text-align: center; color: #968a74; font-size: 12px; line-height: 1.5; }
+  </style>
+</head>
+<script>
+  const allowedPreviewOrigins = new Set(['https://tenebra-network.com', 'http://localhost', 'http://127.0.0.1']);
+  const isLocalPreview = location.protocol === 'file:' || location.hostname === 'localhost' || location.hostname === '127.0.0.1';
+  if (!isLocalPreview && !allowedPreviewOrigins.has(location.origin)) {
+    window.location.replace('https://tenebra-network.com/');
+  }
+</script>
+<body>
+  <main>
+    <header><span>TSC-1 NETWORK</span><span class="pill">PREVIEW</span></header>
+    <img class="coin" src="assets/tnb-emblem-v2.png" alt="TENEBRA TNB emblem">
+    <h1>TENEBRA Wallet</h1>
+    <p class="sub">TNB - Private by design</p>
+    <section class="card"><div class="label">TNB Balance</div><div class="value">Unavailable</div><p class="muted">The wallet is not connected to an active network yet. There is no confirmed balance to display.</p></section>
+    <section class="card"><div class="label">Wallet Address</div><p class="muted">Your address will appear here after the local wallet is securely connected. Do not enter your password on this page.</p></section>
+    <div class="actions"><button disabled>Send TNB</button><button disabled>Mine TNB</button></div>
+    <footer>Wallet portal. Signing remains local in the native wallet application.<br><a href="docs/CERTOaudit-mainnet-operational-addendum-2026-09-23.html">CERTOaudit external operational report</a></footer>
+      <section class="card"><div class="label">Project log / monetary log</div><p class="muted">Nu există încă un portofel TENEBRA public. Max TNB: 100.000.000; fondator: 10.000.000; mining: 90.000.000. Distribuție fee: 90% miner / 10% treasury.</p></section></main>
+<script>document.documentElement.lang='en';const text={'Nu există încă un portofel TENEBRA public.':'There is currently no public TENEBRA wallet.','fondator:':'founder:','mining:':'mining:','Distribuție fee:':'Fee split:'};for(const node of document.body.querySelectorAll('*'))for(const child of node.childNodes)if(child.nodeType===3){let value=child.nodeValue;for(const [source,target] of Object.entries(text))value=value.split(source).join(target);child.nodeValue=value;}</script></body>
+</html>
+
+
+
+

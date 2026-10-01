@@ -1,0 +1,12 @@
+{
+  "manifest_version": 3,
+  "name": "TENEBRA Wallet",
+  "version": "0.1.0",
+  "description": "Non-custodial TENEBRA wallet adapter for browser DEX applications.",
+  "permissions": ["storage"],
+  "host_permissions": ["https://tenebra-network.com/*"],
+  "background": {"service_worker": "background.js", "type": "module"},
+  "action": {"default_title": "TENEBRA Wallet", "default_popup": "popup.html"},
+  "content_scripts": [{"matches": ["https://tenebra-network.com/*"], "js": ["content.js"], "run_at": "document_start"}],
+  "web_accessible_resources": [{"resources": ["wallet-wasm/*"], "matches": ["https://tenebra-network.com/*"]}]
+}

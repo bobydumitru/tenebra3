@@ -1,0 +1,17 @@
+{
+  "recorded_utc": "2026-09-22T19:35:54.186670+00:00",
+  "scope": "local single-node controlled-network sustained confirmation benchmark",
+  "source_sha256": {
+    "Cargo.toml": "9b128fb81899ebfebe4447bd58970917c8a02bcddc66839d8bed46fbbd0d8100",
+    "Cargo.lock": "e21e49118cb2fed12d6280dd04a2f8469886a6a4be5a3016bd03acac96fd1299",
+    "src/network.rs": "f18399584792a2e264dc70be9f21887ac51665f89c1d0f893c0a2d83f8e7c39f",
+    "src/candidate_node.rs": "18f01d784744fd731b45be2fc1d84d9c2619bba06d89ef611f31f7e4d7584b9c",
+    "src/candidate_node_tests.rs": "0e19b7c032f7f7fde1a2291f7994fa5c0ffd6d34eac12937e90d13820ee12012",
+    "src/tsc1_chain_v3.rs": "78338e70f22bbe146aba37e0ed4cb9978c27845805f9e4c6d7ee9000d6fec1b6",
+    "src/tsc1_spend_state_v2.rs": "0218d0d9818a32df01afb11234ebc52a86a303d8ebfe532b597e5d6a58867d0f",
+    "src/tsc1_private_amounts.rs": "6f2ac57382a8156d8d6bfe0ff8194d18dc8c857380e16768126d0cfdb38cdb11",
+    "src/tsc1_peer_v3.rs": "e801f1a766d235d2e9a47d8571c8c44f52b7f42d92fe94b94358975013aaad94",
+    "src/tsc1_tx_v2.rs": "1b4d0f12a8a6aff4b44492a7abd60039098ae252fc79ace102af890c0c23003e",
+    "config/mainnet-genesis.hex": "be3ef02916bd639d42766247b4bc8bee214e321e0154d88dcec906c39b54d2db"
+  }
+}

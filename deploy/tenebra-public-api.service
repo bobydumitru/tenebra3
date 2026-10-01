@@ -1,0 +1,24 @@
+[Unit]
+Description=TENEBRA public read-only status API
+After=network-online.target tenebra-mainnet.service
+Requires=tenebra-mainnet.service
+
+[Service]
+Type=simple
+User=tenebra
+Group=tenebra
+Environment="TENEBRA_API_BIND_HOST=0.0.0.0"
+Environment="TENEBRA_API_BIND_PORT=39455"
+Environment="TENEBRA_MAINNET_BLOCKS_DIR=/var/lib/tenebra-mainnet-candidate/blocks"
+WorkingDirectory=/opt/tenebra/mainnet-candidate
+ExecStart=/usr/bin/python3 /opt/tenebra/mainnet-candidate/public-api.py
+Restart=on-failure
+RestartSec=5
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectHome=true
+ProtectSystem=strict
+ReadWritePaths=/var/lib/tenebra-mainnet-candidate
+
+[Install]
+WantedBy=multi-user.target

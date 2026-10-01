@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TENEBRA DEX | Live</title>
+  <style>
+    :root {
+      --bg: #091012;
+      --panel: #101a1e;
+      --panel-2: #121f23;
+      --line: rgba(255,255,255,0.09);
+      --text: #edf5f1;
+      --muted: #a5b3af;
+      --gold: #d7b36a;
+      --green: #7ad7a2;
+      --red: #e8927a;
+      --shadow: rgba(0,0,0,0.38);
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0; font: 16px/1.6 Arial, sans-serif; background:
+        radial-gradient(circle at top, rgba(144, 102, 43, 0.24), transparent 32%),
+        linear-gradient(180deg, #081012 0%, #0d171a 100%);
+      color: var(--text);
+    }
+    .shell { width: min(1180px, calc(100% - 36px)); margin: 0 auto; }
+    header { position: sticky; top: 0; z-index: 4; background: rgba(9,16,18,.84); backdrop-filter: blur(14px); border-bottom: 1px solid var(--line); }
+    .nav { min-height: 76px; display: flex; align-items: center; justify-content: space-between; gap: 18px; }
+    .brand { display: inline-flex; align-items: center; gap: 10px; color: var(--text); text-decoration: none; letter-spacing: .08em; text-transform: uppercase; font-size: 12px; }
+    .brand img { width: 20px; height: 20px; }
+    nav { display: flex; align-items: center; gap: 20px; font-size: 13px; flex-wrap: wrap; }
+    nav a { color: var(--muted); text-decoration: none; }
+    nav a:hover { color: var(--text); }
+    .status-pill {
+      padding: 7px 10px; border: 1px solid rgba(122,215,162,.45); border-radius: 999px;
+      color: var(--green); font-size: 11px; letter-spacing: .12em; text-transform: uppercase;
+    }
+    main { padding: 48px 0 72px; }
+    .hero { display: grid; grid-template-columns: 1.15fr .85fr; gap: 28px; align-items: center; }
+    .eyebrow {
+      color: var(--gold); text-transform: uppercase; letter-spacing: .14em; font-size: 11px; margin-bottom: 14px;
+    }
+    h1 {
+      margin: 0; font-family: Georgia, serif; font-size: clamp(42px, 5vw, 72px); line-height: 0.98; letter-spacing: -0.04em;
+    }
+    .lead {
+      margin: 18px 0 0; font-size: 18px; line-height: 1.7; color: var(--muted); max-width: 620px;
+    }
+    .panel {
+      background: linear-gradient(180deg, rgba(16,26,30,.95), rgba(18,31,35,.92));
+      border: 1px solid var(--line); border-radius: 22px; box-shadow: 0 22px 48px var(--shadow);
+      overflow: hidden;
+    }
+    .panel-body { padding: 24px; }
+    .stats { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; margin-top: 20px; }
+    .stat {
+      background: rgba(255,255,255,0.015); border: 1px solid var(--line); border-radius: 16px; padding: 16px;
+    }
+    .stat .label { color: var(--muted); font-size: 12px; text-transform: uppercase; letter-spacing: .12em; }
+    .stat .value { margin-top: 8px; font-size: 24px; font-weight: 700; }
+    .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; margin-top: 28px; }
+    .pool {
+      background: rgba(255,255,255,0.02); border: 1px solid var(--line); border-radius: 18px; padding: 18px;
+    }
+    .pool-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+    .pool-name { font-size: 18px; font-weight: 700; }
+    .pool-meta { margin-top: 12px; color: var(--muted); font-size: 14px; }
+    .amount-row { display: flex; justify-content: space-between; gap: 10px; margin-top: 12px; font-size: 14px; }
+    .swap-box {
+      margin-top: 30px; background: rgba(255,255,255,0.02); border: 1px solid var(--line); border-radius: 18px; padding: 22px;
+    }
+    .swap-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+    .swap-grid { display: grid; grid-template-columns: 1fr 40px 1fr; gap: 12px; align-items: center; }
+    .token-input {
+      background: rgba(255,255,255,0.02); border: 1px solid var(--line); border-radius: 14px; padding: 14px;
+    }
+    .token-input label { display: block; color: var(--muted); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; margin-bottom: 8px; }
+    .token-input input, .token-input select {
+      width: 100%; background: transparent; border: none; color: var(--text); font: 700 18px Arial, sans-serif; outline: none;
+    }
+    .swap-arrow {
+      width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--line); background: rgba(215,179,106,.08); display: grid; place-items: center; font-size: 20px; color: var(--gold);
+    }
+    .button {
+      margin-top: 18px; width: 100%; border: none; border-radius: 14px; padding: 14px 18px; background: linear-gradient(135deg, #d7b36a, #8e6f2f); color: #0a120f; font-weight: 700; cursor: pointer;
+    }
+    .button:hover { filter: brightness(1.05); }
+    .result {
+      margin-top: 14px; color: var(--muted); font-size: 14px; min-height: 21px;
+    }
+    .wallet-connect {
+      margin-top: 28px; padding: 22px; border: 1px solid var(--line); border-radius: 18px; background: rgba(255,255,255,0.02);
+    }
+    .wallet-connect p { margin: 8px 0 0; color: var(--muted); }
+    .wallet-status { margin-top: 14px; min-height: 22px; color: var(--muted); overflow-wrap: anywhere; word-break: break-word; }
+    .wallet-status code { display: inline-block; max-width: 100%; overflow-wrap: anywhere; word-break: break-all; vertical-align: middle; }
+    .wallet-status button { margin: 4px 4px 0 0; }
+    .error { color: var(--red); }
+    .success { color: var(--green); }
+    footer {
+      border-top: 1px solid var(--line); padding: 22px 0 34px; color: var(--muted); font-size: 13px;
+    }
+    @media (max-width: 820px) {
+      .hero { grid-template-columns: 1fr; }
+      .grid, .stats, .swap-grid { grid-template-columns: 1fr; }
+      .swap-arrow { justify-self: center; }
+      nav { gap: 12px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="shell nav">
+      <a class="brand" href="index.html"><img src="assets/tnb-emblem-v2.png" alt="TENEBRA emblem"> TENEBRA</a>
+      <nav>
+        <a href="index.html">Home</a>
+        <a href="tenebra-network.html">Network</a>
+        <a href="tenebra-scan.html">Scan</a>
+        <a href="web-wallet.html">Wallet</a>
+        <a href="tenebra-marketplace.html">Marketplace</a>
+        <span class="status-pill">LIVE DEX</span>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="shell hero">
+      <div>
+        <div class="eyebrow">TSC-1 / live trading stack</div>
+        <h1>DEX is live.</h1>
+        <p class="lead">This DEX is running locally in the browser with real token math, live pool re-pricing, live reserve updates, and instant quote recalculation. It is a working prototype interface for the protocol’s AMM flow.</p>
+      </div>
+
+      <aside class="panel">
+        <div class="panel-body">
+          <span class="badge">Market</span>
+          <div class="stats">
+            <div class="stat">
+              <div class="label">Mode</div>
+              <div class="value" id="status-mode">Live</div>
+            </div>
+            <div class="stat">
+              <div class="label">Fee</div>
+              <div class="value" id="dex-fee-rate">0.30%</div>
+            </div>
+            <div class="stat">
+              <div class="label">Price</div>
+              <div class="value" id="status-price">1.00</div>
+            </div>
+            <div class="stat">
+              <div class="label">Routing</div>
+              <div class="value">AMM</div>
+            </div>
+          </div>
+        </div>
+      </aside>
+    </div>
+
+    <div class="shell">
+      <div class="wallet-connect">
+        <div class="swap-header">
+          <div class="pool-name">Connect TENEBRA wallet</div>
+          <span class="badge">Local wallet</span>
+        </div>
+        <p>Connect the wallet file and password once. DEX operations will be signed locally.</p>
+        <div class="grid">
+          <div class="token-input"><label>Wallet file</label><input id="external-wallet-file" type="file" accept=".tsc1,application/octet-stream"></div>
+          <div class="token-input"><label>Wallet password</label><input id="external-wallet-password" type="password" autocomplete="current-password"></div>
+        </div>
+        <button class="button" id="connect-external-wallet" type="button">Connect wallet</button>
+        <button class="button" id="disconnect-wallet" type="button" hidden>Disconnect wallet</button>
+        <div class="wallet-status" id="external-wallet-status">No wallet connected.</div>
+        <div id="wallet-assets" class="wallet-status">Connect a wallet to view owned assets.</div>
+      </div>
+      <div class="swap-box">
+        <div class="swap-header">
+          <div class="pool-name">Create a pool</div>
+          <span class="badge">Wallet signed</span>
+        </div>
+        <p class="pool-meta">Add liquidity to a pair of existing assets. The operation is verified by the network and included in the next block.</p>
+        <div class="grid">
+          <div class="token-input"><label>Token address</label><input id="pool-asset-a" inputmode="hex" placeholder="Copy the token address"></div>
+          <div class="token-input"><label>Token address</label><input id="pool-asset-b" inputmode="hex" placeholder="Copy the token address"></div>
+          <div class="token-input"><label>First asset amount</label><input id="pool-amount-a" type="number" min="1" step="1" placeholder="Example: 1000"></div>
+          <div class="token-input"><label>Second asset amount</label><input id="pool-amount-b" type="number" min="1" step="1" placeholder="Example: 1000"></div>
+        </div>
+        <details class="advanced"><summary>Advanced options</summary><label>Transaction sequence<input id="pool-sequence" type="number" inputmode="numeric" min="0" step="1" value="0"></label><p class="pool-meta">Enter the sequence number directly, for example 1, 2, or 3.</p></details>
+        <button class="button" id="create-pool-btn">Create pool</button>
+        <div id="pool-result" class="result">Complete the fields to submit the operation.</div>
+      </div>
+
+      <div class="swap-box">
+        <div class="swap-header">
+          <div class="pool-name">Swap assets</div>
+          <span class="badge">Network verified</span>
+        </div>
+        <div class="grid">
+          <div class="token-input"><label>Pool ID</label><input id="swap-pool-id" inputmode="hex" placeholder="Copy the pool ID"></div>
+          <div class="token-input"><label>Input token address</label><input id="swap-input-asset" inputmode="hex" placeholder="Copy the token address"></div>
+          <div class="token-input"><label>Amount</label><input id="swap-input-amount" type="number" min="1" step="1" placeholder="Example: 1000"></div>
+          <div class="token-input"><label>Minimum output</label><input id="swap-min-output" type="number" min="0" step="1" placeholder="Example: 950"></div>
+        </div>
+        <details class="advanced"><summary>Advanced options</summary><label>Transaction sequence<input id="swap-sequence" type="number" inputmode="numeric" min="0" step="1" value="0"></label><p class="pool-meta">Enter the sequence number directly, for example 1, 2, or 3.</p></details>
+        <button class="button" id="swap-btn">Confirm swap</button>
+        <div id="swap-result" class="result">The network verifies the pool, balance, and signature.</div>
+      </div>
+
+      <div class="swap-box">
+        <div class="swap-header">
+          <div class="pool-name">Remove liquidity</div>
+          <span class="badge">Sent to wallet</span>
+        </div>
+        <p class="pool-meta">Both assets are returned to the wallet that created the pool.</p>
+        <div class="grid">
+          <div class="token-input"><label>Pool ID</label><input id="remove-pool-id" inputmode="hex" placeholder="Copy the pool ID"></div>
+          <div class="token-input"><label>Withdrawal percentage</label><input id="remove-share" type="number" min="1" max="100" step="1" placeholder="Example: 25"></div>
+        </div>
+        <details class="advanced"><summary>Advanced options</summary><label>Transaction sequence<input id="remove-sequence" type="number" inputmode="numeric" min="0" step="1" value="0"></label><p class="pool-meta">Enter the sequence number directly, for example 1, 2, or 3.</p></details>
+        <button class="button" id="remove-btn">Remove liquidity</button>
+        <div id="remove-result" class="result">The network verifies the reserves and sends both assets to the wallet.</div>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <div class="shell">TENEBRA DEX · signed on-chain operations</div>
+  </footer>
+
+  <script>
+    const TENEBRA_CHAIN_ID = 'TSC-1';
+    const EXTERNAL_TEST_MESSAGE = 'TENEBRA wallet adapter test v1';
+    let externalWallet = null;
+
+    function findExternalWallet() {
+      return window.tenebraWallet || window.tenebra || null;
+    }
+
+    async function apiJson(url) {
+      let lastError = 'Network request failed.';
+      for (let attempt = 0; attempt < 8; attempt += 1) {
+        try { const response = await fetch(url, { cache: 'no-store' }); const text = await response.text(); let data; try { data = JSON.parse(text); } catch { lastError = `Server returned HTTP ${response.status} instead of JSON.`; continue; } if (response.ok) return data; lastError = data.error || `HTTP ${response.status}`; } catch (error) { lastError = error.message; }
+        await new Promise(resolve => setTimeout(resolve, 750 * (attempt + 1)));
+      }
+      throw Error(lastError);
+    }
+
+    async function downloadPublicChain() {
+      const status = await apiJson('/api/status');
+      const pages = []; let total = 0; let from = 1; let anchor = '';
+      while (from <= status.height) {
+        const page = await apiJson(`/api/blocks?from=${from}&limit=4${anchor ? `&anchor=${anchor}` : ''}`);
+        if (!Array.isArray(page.blocks) || !page.count) throw Error('The blockchain page is invalid or empty.');
+        for (const encoded of page.blocks) { const bytes = Uint8Array.from(atob(encoded), character => character.charCodeAt(0)); pages.push(bytes); total += 4 + bytes.length; }
+        from += page.count; anchor = page.tip;
+      }
+      const chain = new Uint8Array(total); let offset = 0;
+      for (const bytes of pages) { new DataView(chain.buffer).setUint32(offset, bytes.length, true); offset += 4; chain.set(bytes, offset); offset += bytes.length; }
+      return chain;
+    }
+
+    async function scanTnbBalance(file, password) {
+      const chain = await downloadPublicChain(); const fileBytes = new Uint8Array(await file.arrayBuffer()); const passwordBytes = new TextEncoder().encode(password); const memory = wasm.memory;
+      const filePtr = wasm.wallet_alloc(fileBytes.length), passwordPtr = wasm.wallet_alloc(passwordBytes.length), chainPtr = wasm.wallet_alloc(chain.length), outputPtr = wasm.wallet_alloc(8);
+      new Uint8Array(memory.buffer).set(fileBytes, filePtr); new Uint8Array(memory.buffer).set(passwordBytes, passwordPtr); new Uint8Array(memory.buffer).set(chain, chainPtr);
+      if (!wasm.wallet_native_file_balance(filePtr, passwordPtr, passwordBytes.length, chainPtr, chain.length, outputPtr)) throw Error('The TNB balance could not be scanned.');
+      return Number(new DataView(memory.buffer).getBigUint64(outputPtr, true)) / 1000000000;
+    }
+
+    async function loadOwnedAssets(address, file, password) {
+      const target = document.getElementById('wallet-assets'); target.textContent = 'Scanning wallet balances...';
+      try {
+        let assetResponse = { assets: [] }; try { assetResponse = await apiJson(`/api/assets?owner=${encodeURIComponent(address)}`); } catch { } let tnbBalance = null; try { tnbBalance = await scanTnbBalance(file, password); } catch { }
+        const assets = [{ symbol: 'TNB', name: 'TENEBRA', asset_id: '0'.repeat(64), display_id: address, balance: tnbBalance, decimals: 9 }, ...(assetResponse.assets || []).filter(asset => Number(asset.balance) > 0).map(asset => ({ ...asset, display_id: asset.asset_id, balance: Number(asset.balance) / 10 ** asset.decimals }))];
+        target.innerHTML = '<strong>Owned assets</strong>';
+        for (const asset of assets) { const row = document.createElement('div'); row.className = 'pool-meta'; const balance = asset.balance === null ? 'scan unavailable' : asset.balance.toFixed(9); row.innerHTML = `<strong>${asset.symbol}</strong> · ${balance} · <code>${asset.display_id}</code> `; for (const targetId of ['pool-asset-a', 'pool-asset-b']) { const button = document.createElement('button'); button.type = 'button'; button.textContent = targetId.endsWith('a') ? 'Use A' : 'Use B'; button.onclick = () => { document.getElementById(targetId).value = asset.asset_id; }; row.appendChild(button); } target.appendChild(row); }
+      } catch (error) { target.textContent = `Assets unavailable: ${error.message}`; }
+    }
+
+    async function connectExternalWallet() {
+      const status = document.getElementById('external-wallet-status');
+      const file = document.getElementById('external-wallet-file').files[0];
+      const password = document.getElementById('external-wallet-password').value;
+      try {
+        if (!file || !password) throw Error('Select the wallet file and enter the password.');
+        await loadSigner();
+        const bytes = new Uint8Array(await file.arrayBuffer());
+        if (bytes.length !== 96) throw Error('Invalid wallet file.');
+        const passwordBytes = new TextEncoder().encode(password);
+        const memory = wasm.memory;
+        const filePtr = wasm.wallet_alloc(bytes.length), passwordPtr = wasm.wallet_alloc(passwordBytes.length), addressPtr = wasm.wallet_alloc(160);
+        new Uint8Array(memory.buffer).set(bytes, filePtr); new Uint8Array(memory.buffer).set(passwordBytes, passwordPtr);
+        const addressLength = wasm.wallet_native_file_address(filePtr, passwordPtr, passwordBytes.length, addressPtr);
+        if (!addressLength) throw Error('Incorrect password or invalid wallet file.');
+        const address = new TextDecoder().decode(new Uint8Array(memory.buffer).slice(addressPtr, addressPtr + addressLength));
+        externalWallet = { file, password, address };
+        status.textContent = `Wallet connected: ${address}`;
+        status.className = 'wallet-status success';
+        document.getElementById('disconnect-wallet').hidden = false;
+        await loadOwnedAssets(address, file, password);
+      } catch (error) {
+        externalWallet = null;
+        status.textContent = error.message || 'The wallet could not be connected.';
+        status.className = 'wallet-status error';
+      }
+    }
+
+    document.getElementById('connect-external-wallet')?.addEventListener('click', connectExternalWallet);
+    document.getElementById('disconnect-wallet')?.addEventListener('click', () => {
+      externalWallet = null;
+      document.getElementById('external-wallet-file').value = '';
+      document.getElementById('external-wallet-password').value = '';
+      document.getElementById('disconnect-wallet').hidden = true;
+      document.getElementById('external-wallet-status').textContent = 'Wallet disconnected.';
+      document.getElementById('external-wallet-status').className = 'wallet-status';
+      document.getElementById('wallet-assets').textContent = 'Connect a wallet to view owned assets.';
+    });
+    ['external-wallet-file', 'external-wallet-password'].forEach(id => document.getElementById(id)?.addEventListener('keydown', event => { if (event.key === 'Enter') { event.preventDefault(); connectExternalWallet(); } }));
+
+    let wasm;
+        const hexBytes = value => {
+          if (!/^[0-9a-fA-F]{64}$/.test(value.trim())) throw Error('Asset and pool IDs must contain exactly 64 hex characters.');
+          return Uint8Array.from(value.trim().match(/../g), pair => parseInt(pair, 16));
+        };
+        const b64 = bytes => btoa(String.fromCharCode(...bytes));
+        async function loadSigner() {
+          if (wasm) return;
+          const module = await import('/assets/wallet-wasm/tenebra_wallet_wasm.js?v=20260923-dex');
+          wasm = await module.default();
+        }
+        async function signedOperation(kind) {
+          if (!externalWallet) throw Error('Connect the TENEBRA wallet before continuing.');
+          const file = externalWallet.file;
+          const password = externalWallet.password;
+          if (externalWallet?.provider) {
+            if (kind === 'pool') return externalWallet.provider.request({ method: 'tenebra_signDexCreatePool', params: [{
+              assetA: document.getElementById('pool-asset-a').value.trim(), assetB: document.getElementById('pool-asset-b').value.trim(),
+              amountA: document.getElementById('pool-amount-a').value, amountB: document.getElementById('pool-amount-b').value,
+              sequence: document.getElementById('pool-sequence').value
+            }] });
+            if (kind === 'swap') return externalWallet.provider.request({ method: 'tenebra_signDexSwap', params: [{
+              poolId: document.getElementById('swap-pool-id').value.trim(), inputAsset: document.getElementById('swap-input-asset').value.trim(),
+              inputAmount: document.getElementById('swap-input-amount').value, minOutput: document.getElementById('swap-min-output').value,
+              sequence: document.getElementById('swap-sequence').value
+            }] });
+            return externalWallet.provider.request({ method: 'tenebra_signDexRemoveLiquidity', params: [{
+              poolId: document.getElementById('remove-pool-id').value.trim(), shareBps: Number(document.getElementById('remove-share').value) * 100,
+              sequence: document.getElementById('remove-sequence').value
+            }] });
+          }
+          await loadSigner();
+          if (!file || !password) throw Error('Select the wallet file and enter the password.');
+          const fileBytes = new Uint8Array(await file.arrayBuffer());
+          const passwordBytes = new TextEncoder().encode(password);
+          const memory = wasm.memory;
+          const filePtr = wasm.wallet_alloc(fileBytes.length);
+          const passwordPtr = wasm.wallet_alloc(passwordBytes.length);
+          const outputPtr = wasm.wallet_alloc(512);
+          new Uint8Array(memory.buffer).set(fileBytes, filePtr);
+          new Uint8Array(memory.buffer).set(passwordBytes, passwordPtr);
+          let length;
+          if (kind === 'pool') {
+            const a = hexBytes(document.getElementById('pool-asset-a').value);
+            const b = hexBytes(document.getElementById('pool-asset-b').value);
+            const aPtr = wasm.wallet_alloc(32), bPtr = wasm.wallet_alloc(32);
+            new Uint8Array(memory.buffer).set(a, aPtr); new Uint8Array(memory.buffer).set(b, bPtr);
+            length = wasm.wallet_native_file_sign_dex_create_pool(filePtr, passwordPtr, passwordBytes.length, aPtr, bPtr,
+              BigInt(document.getElementById('pool-amount-a').value), BigInt(document.getElementById('pool-amount-b').value),
+              BigInt(document.getElementById('pool-sequence').value), outputPtr);
+          } else if (kind === 'swap') {
+            const pool = hexBytes(document.getElementById('swap-pool-id').value);
+            const input = hexBytes(document.getElementById('swap-input-asset').value);
+            const poolPtr = wasm.wallet_alloc(32), inputPtr = wasm.wallet_alloc(32);
+            new Uint8Array(memory.buffer).set(pool, poolPtr); new Uint8Array(memory.buffer).set(input, inputPtr);
+            length = wasm.wallet_native_file_sign_dex_swap(filePtr, passwordPtr, passwordBytes.length, poolPtr, inputPtr,
+              BigInt(document.getElementById('swap-input-amount').value), BigInt(document.getElementById('swap-min-output').value),
+              BigInt(document.getElementById('swap-sequence').value), outputPtr);
+          } else {
+            const pool = hexBytes(document.getElementById('remove-pool-id').value);
+            const poolPtr = wasm.wallet_alloc(32);
+            new Uint8Array(memory.buffer).set(pool, poolPtr);
+            const share = Number(document.getElementById('remove-share').value);
+            if (!Number.isInteger(share) || share < 1 || share > 100) throw Error('Enter a percentage between 1 and 100.');
+            length = wasm.wallet_native_file_sign_dex_remove_liquidity(filePtr, passwordPtr, passwordBytes.length, poolPtr,
+              share * 100, BigInt(document.getElementById('remove-sequence').value), outputPtr);
+          }
+          if (!length) throw Error('The password is incorrect or the operation cannot be signed.');
+          return b64(new Uint8Array(memory.buffer.slice(outputPtr, outputPtr + length)));
+        }
+        async function submit(kind, target) {
+          const result = document.getElementById(target);
+          result.className = 'result'; result.textContent = 'Signing locally and submitting the operation to the public network...';
+          try {
+            const operation = await signedOperation(kind);
+            const response = await fetch('/api/dex/submit', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({operation}) });
+            const data = await response.json();
+            if (!response.ok) throw Error(data.error || 'The network rejected the operation.');
+            result.className = 'result success';
+            result.textContent = `Accepted by the network. Operation ID: ${data.operation_id}. Waiting for block confirmation...`;
+            const operationId = data.operation_id;
+            for (let attempt = 0; attempt < 30; attempt += 1) {
+              await new Promise(resolve => setTimeout(resolve, 2000));
+              const statusResponse = await fetch(`/api/dex/status?id=${operationId}`, { cache: 'no-store' });
+              if (!statusResponse.ok) continue;
+              const status = await statusResponse.json();
+              if (status.status === 'confirmed') {
+                result.textContent = `Confirmed in a block. Operation ID: ${operationId}.`;
+                return;
+              }
+              result.textContent = `Pending in the network. Operation ID: ${operationId}.`;
+            }
+            result.textContent = `Accepted but not yet confirmed. Operation ID: ${operationId}.`;
+          } catch (error) { result.className = 'result error'; result.textContent = error.message; }
+        }
+        document.getElementById('create-pool-btn').addEventListener('click', () => submit('pool', 'pool-result'));
+        document.getElementById('swap-btn').addEventListener('click', () => submit('swap', 'swap-result'));
+        document.getElementById('remove-btn').addEventListener('click', () => submit('remove', 'remove-result'));
+        document.querySelectorAll('.swap-box input, .swap-box select').forEach(input => input.addEventListener('keydown', event => { if (event.key === 'Enter') { event.preventDefault(); input.closest('.swap-box')?.querySelector('.button')?.click(); } }));
+        fetch('/api/status', {cache:'no-store'}).then(response => response.ok ? response.json() : Promise.reject()).then(status => { document.getElementById('dex-fee-rate').textContent = Number(status.height) >= 22000 ? '1.00%' : '0.30%'; }).catch(() => { document.getElementById('dex-fee-rate').textContent = '0.30% until block 22,000'; });
+    </script>

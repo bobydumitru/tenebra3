@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="ro">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TENEBRA Wallet</title>
+  <style>
+    :root { color-scheme: dark; --bg:#0b1213; --panel:#142020; --line:#31413f; --text:#edf5f1; --muted:#a6b4ae; --gold:#d7b36a; --mint:#90dcb7; --red:#ee8d73; }
+    * { box-sizing: border-box; }
+    body { width: 340px; margin: 0; padding: 20px; background: radial-gradient(circle at top, #1c2418, var(--bg) 58%); color: var(--text); font: 14px/1.5 Arial, sans-serif; }
+    h1 { margin: 0 0 4px; font: 28px Georgia, serif; }
+    p { color: var(--muted); margin: 8px 0 16px; }
+    label { display: block; color: var(--muted); margin: 12px 0 5px; }
+    input { width: 100%; padding: 10px; border: 1px solid var(--line); background: #0b1213; color: var(--text); }
+    button { width: 100%; margin-top: 14px; padding: 11px; border: 0; background: linear-gradient(135deg, var(--gold), #8d6d2d); color: #0b1213; font-weight: 700; cursor: pointer; }
+    .status { min-height: 22px; margin-top: 14px; color: var(--mint); word-break: break-word; }
+    .error { color: var(--red); }
+    .address { color: var(--mint); font: 11px Consolas, monospace; word-break: break-all; }
+    .network { margin-top: 12px; padding: 12px; border: 1px solid var(--line); background: rgba(255,255,255,.025); }
+    .network strong { display: block; }
+    .network span { color: var(--muted); font-size: 12px; }
+    .network input { margin-top: 8px; }
+    .watch { margin-top: 8px; color: var(--mint); font: 11px Consolas, monospace; word-break: break-all; }
+  </style>
+</head>
+<body>
+  <h1>TENEBRA Wallet</h1>
+  <p>Wallet extern TENEBRA. Cheia rămâne locală și sesiunea se șterge la închiderea browserului.</p>
+  <label for="wallet-file">Fișier wallet `.tsc1`</label>
+  <input id="wallet-file" type="file" accept=".tsc1,application/octet-stream">
+  <label for="password">Parolă</label>
+  <input id="password" type="password" autocomplete="current-password">
+  <button id="unlock" type="button">Deblochează wallet-ul</button>
+  <button id="lock" type="button">Blochează</button>
+  <div id="status" class="status">Wallet blocat.</div>
+  <div id="address" class="address"></div>
+  <h2>Rețele</h2>
+  <div class="network"><strong>TENEBRA / TSC-1</strong><span>Wallet activ, semnare nativă</span><div id="tenebra-network-address" class="watch"></div></div>
+  <div class="network"><strong>Solana</strong><span>Adresă publică pentru observare</span><input id="solana-address" placeholder="Adresa Solana"><button id="save-solana" type="button">Salvează adresa</button><div id="solana-watch" class="watch"></div></div>
+  <div class="network"><strong>Ethereum / EVM</strong><span>Adresă publică pentru observare</span><input id="evm-address" placeholder="0x..." spellcheck="false"><button id="save-evm" type="button">Salvează adresa</button><div id="evm-watch" class="watch"></div></div>
+  <div class="network"><strong>Bitcoin</strong><span>Adresă publică pentru observare</span><input id="bitcoin-address" placeholder="bc1..." spellcheck="false"><button id="save-bitcoin" type="button">Salvează adresa</button><div id="bitcoin-watch" class="watch"></div></div>
+  <div class="network"><strong>Registry rețele suportate</strong><span>Rețele concrete validate: Solana, EVM și Bitcoin</span>
+    <select id="supported-network-select" style="width:100%; margin-top:8px; padding:10px; background:#0b1213; color:#edf5f1; border:1px solid var(--line);">
+      <option value="solana">Solana</option>
+      <option value="evm">Ethereum / EVM</option>
+      <option value="bitcoin">Bitcoin</option>
+    </select>
+    <input id="supported-network-address" placeholder="Adresă publică"><input id="supported-network-deposit" placeholder="Adresă de depunere"><input id="supported-network-withdraw" placeholder="Adresă de retragere"><button id="save-supported-network" type="button">Salvează rețeaua</button>
+    <div id="supported-network-watch" class="watch"></div>
+  </div>
+  <div class="network"><strong>Monedă personalizată</strong><span>Adaugă orice monedă / rețea pentru observare, depunere și retragere configurate local</span><input id="custom-network-name" placeholder="ex: ADA, XRP, USDT, TON"><input id="custom-network-address" placeholder="Adresă publică"><input id="custom-network-deposit" placeholder="Adresă de depunere (opțional)"><input id="custom-network-withdraw" placeholder="Adresă de retragere (opțional)"><button id="save-custom-network" type="button">Salvează monedă</button><div id="custom-network-watch" class="watch"></div></div>
+  <script>const englishPopupText={'Wallet extern TENEBRA. Cheia rămâne locală și sesiunea se șterge la închiderea browserului.':'External TENEBRA wallet. The key remains local and the session is cleared when the browser closes.','Fișier wallet':'Wallet file','Parolă':'Password','Deblochează wallet-ul':'Unlock wallet','Blochează':'Lock','Wallet blocat.':'Wallet locked.','Rețele':'Networks','Wallet activ, semnare nativă':'Active wallet, native signing','Adresă publică pentru observare':'Public address for monitoring','Adresa Solana':'Solana address','Salvează adresa':'Save address','Registry rețele suportate':'Supported network registry','Rețele concrete validate: Solana, EVM și Bitcoin':'Validated networks: Solana, EVM, and Bitcoin','Adresă publică':'Public address','Adresă de depunere':'Deposit address','Adresă de retragere':'Withdrawal address','Salvează rețeaua':'Save network','Monedă personalizată':'Custom asset','Adaugă orice monedă / rețea pentru observare, depunere și retragere configurate local':'Add any asset or network for locally configured monitoring, deposits, and withdrawals','Salvează monedă':'Save asset'};function translatePopup(root){const walker=document.createTreeWalker(root,NodeFilter.SHOW_TEXT);const nodes=[];while(walker.nextNode())nodes.push(walker.currentNode);for(const node of nodes){let value=node.nodeValue;for(const [source,target] of Object.entries(englishPopupText))value=value.split(source).join(target);if(value!==node.nodeValue)node.nodeValue=value;}}translatePopup(document.body);new MutationObserver(()=>translatePopup(document.body)).observe(document.body,{childList:true,subtree:true,characterData:true});</script>
+  <script src="multichain.js"></script>
+  <script src="network-config.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>

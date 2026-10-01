@@ -1,0 +1,8 @@
+[Unit]
+Description=TENEBRA TSC-1 v3f health check
+After=tenebra-v3f.service
+OnFailure=tenebra-v3f-alert.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/healthcheck-tenebra-v3f

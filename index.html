@@ -1,0 +1,303 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0d1415">
+  <link rel="icon" type="image/png" href="/assets/tnb-emblem-v2.png">
+  <title>TENEBRA | Public Mainnet</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #091012;
+      --bg-2: #121b1d;
+      --panel: #121d1d;
+      --panel-2: #1a2a29;
+      --line: #2d3938;
+      --ink: #edf5f1;
+      --muted: #9daea8;
+      --gold: #d7b06a;
+      --mint: #90dcb7;
+      --shadow: rgba(0,0,0,.26);
+      font-family: Arial, Helvetica, sans-serif;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--ink);
+      background: radial-gradient(circle at 20% 20%, rgba(133, 172, 158, .10), transparent 18%), linear-gradient(135deg, var(--bg) 0%, var(--bg-2) 45%, #1a140f 100%);
+    }
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background-image: linear-gradient(rgba(144,220,183,.03) 1px, transparent 1px), linear-gradient(90deg, rgba(144,220,183,.03) 1px, transparent 1px);
+      background-size: 26px 26px;
+      mask-image: linear-gradient(to bottom, black, transparent 92%);
+    }
+    a { color: var(--gold); }
+    .shell { width: min(1180px, calc(100% - 36px)); margin: 0 auto; }
+    header {
+      position: sticky; top: 0; z-index: 2; backdrop-filter: blur(12px);
+      background: rgba(9,16,18,.7); border-bottom: 1px solid var(--line);
+    }
+    .nav {
+      display: flex; align-items: center; justify-content: space-between; gap: 20px; min-height: 78px;
+    }
+    .brand {
+      display: inline-flex; align-items: center; gap: 12px; text-decoration: none; color: var(--ink);
+      letter-spacing: .12em; font-size: 15px; text-transform: uppercase; font-weight: 700;
+    }
+    .brand img {
+      width: 34px; height: 34px; object-fit: contain; border-radius: 50%;
+      background: linear-gradient(145deg, #f1d49d, #b5853c 60%, #765421); padding: 4px; box-shadow: 0 0 18px rgba(215,176,106,.35);
+    }
+    nav { display: flex; align-items: center; gap: 22px; font-size: 13px; flex-wrap: wrap; }
+    nav a { color: var(--muted); text-decoration: none; }
+    nav a:hover { color: var(--ink); }
+    .status-pill {
+      border: 1px solid rgba(144,220,183,.45); padding: 7px 10px; border-radius: 999px; color: var(--mint);
+      letter-spacing: .06em; text-transform: uppercase; font-size: 11px; background: rgba(144,220,183,.08);
+    }
+    main { position: relative; z-index: 1; }
+    .hero {
+      padding: 86px 0 52px; display: grid; grid-template-columns: 1.2fr .8fr; gap: 56px; align-items: center;
+    }
+    .eyebrow {
+      color: var(--gold); font-size: 11px; letter-spacing: .18em; text-transform: uppercase; font-weight: 700;
+    }
+    h1 {
+      margin: 18px 0 18px; font-size: clamp(46px, 7vw, 88px); line-height: .92; letter-spacing: -.06em; font-weight: 400;
+      font-family: Georgia, 'Times New Roman', serif;
+    }
+    .lead {
+      max-width: 640px; color: var(--muted); font-size: 18px; line-height: 1.7; margin: 0;
+    }
+    .hero-side { border-left: 1px solid var(--line); padding-left: 26px; }
+    .hero-side strong {
+      display: block; font-size: 26px; font-weight: 400; margin: 10px 0 12px; color: var(--mint);
+      font-family: Georgia, 'Times New Roman', serif;
+    }
+    .hero-side p { margin: 0; color: var(--muted); font-size: 15px; line-height: 1.7; }
+    .cta-row { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 26px; }
+    .button, .button-secondary {
+      display: inline-flex; align-items: center; justify-content: center; min-height: 48px; padding: 0 18px; border-radius: 999px;
+      text-decoration: none; font-size: 12px; letter-spacing: .12em; text-transform: uppercase; font-weight: 700;
+    }
+    .button {
+      background: linear-gradient(135deg, rgba(215,176,106,.14), rgba(144,220,183,.09)); border: 1px solid rgba(215,176,106,.7); color: var(--ink);
+      box-shadow: 0 14px 30px rgba(0,0,0,.22);
+    }
+    .button-secondary { background: transparent; border: 1px solid var(--line); color: var(--ink); }
+    .metrics {
+      display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); border: 1px solid var(--line); background: rgba(18,29,29,.8);
+    }
+    .metric { padding: 22px 20px; border-right: 1px solid var(--line); }
+    .metric:last-child { border-right: 0; }
+    .metric .label { color: var(--muted); font-size: 10px; letter-spacing: .12em; text-transform: uppercase; }
+    .metric .value { margin-top: 10px; font-size: 28px; font-family: Georgia, 'Times New Roman', serif; }
+    .metric .value small { font-size: 12px; color: var(--muted); font-family: Arial, Helvetica, sans-serif; }
+    section { padding: 60px 0; }
+    .section-head { display: flex; justify-content: space-between; align-items: end; gap: 18px; margin-bottom: 22px; }
+    h2 { margin: 0; font-size: 34px; font-weight: 400; line-height: 1.1; font-family: Georgia, 'Times New Roman', serif; }
+    .section-head p { margin: 0; color: var(--muted); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; }
+    .grid { display: grid; grid-template-columns: 1.3fr .7fr; gap: 18px; }
+    .panel {
+      background: rgba(18,29,29,.82); border: 1px solid var(--line); padding: 22px 24px; box-shadow: 0 18px 32px var(--shadow);
+    }
+    .panel h3 { margin: 0 0 18px; font-size: 22px; font-weight: 400; font-family: Georgia, 'Times New Roman', serif; }
+    .node-row { display: grid; grid-template-columns: 1fr auto; gap: 12px; padding: 16px 0; border-top: 1px solid var(--line); align-items: center; }
+    .node-row:first-of-type { border-top: 0; }
+    .node-name { font-size: 15px; font-weight: 700; }
+    .node-address { margin-top: 5px; color: var(--muted); font-size: 12px; }
+    .state-ok { color: var(--mint); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; }
+    .code {
+      margin-top: 14px; padding: 18px; border: 1px solid var(--line); background: #0a1012; color: #dfeae5;
+      font: 13px/1.7 Consolas, 'Courier New', monospace; overflow-x: auto; white-space: pre-wrap;
+    }
+    .copy-btn {
+      margin-top: 16px; border: 1px solid var(--gold); background: transparent; color: var(--gold); padding: 11px 14px; cursor: pointer;
+      font-size: 12px; letter-spacing: .08em; text-transform: uppercase;
+    }
+    .notice { margin-top: 16px; border-left: 3px solid var(--gold); padding: 10px 14px; color: var(--muted); font-size: 14px; line-height: 1.6; }
+    .facts { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--line); border: 1px solid var(--line); }
+    .fact { background: var(--panel); padding: 18px 20px; }
+    .fact b { display: block; margin-bottom: 10px; color: var(--muted); font-size: 10px; letter-spacing: .12em; text-transform: uppercase; }
+    .fact code { color: var(--ink); font: 12px Consolas, monospace; word-break: break-word; }
+    .cards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
+    .card { display: block; text-decoration: none; color: var(--ink); background: rgba(18,29,29,.82); border: 1px solid var(--line); padding: 22px 22px 18px; min-height: 180px; }
+    .card .mini { color: var(--gold); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; margin-bottom: 14px; display: block; }
+    .card h3 { margin: 0 0 12px; font-size: 24px; font-family: Georgia, 'Times New Roman', serif; font-weight: 400; }
+    .card p { margin: 0; color: var(--muted); line-height: 1.7; font-size: 15px; }
+    footer { border-top: 1px solid var(--line); padding: 24px 0 36px; color: var(--muted); font-size: 12px; }
+    .footer-row { display: flex; justify-content: space-between; gap: 18px; flex-wrap: wrap; }
+    @media (max-width: 860px) {
+      .hero { grid-template-columns: 1fr; gap: 30px; padding-top: 68px; }
+      .hero-side { border-left: 0; border-top: 1px solid var(--line); padding: 16px 0 0 0; }
+      .metrics { grid-template-columns: 1fr 1fr; }
+      .grid, .cards { grid-template-columns: 1fr; }
+      nav { gap: 12px; }
+    }
+    @media (max-width: 560px) {
+      .shell { width: min(100% - 24px, 760px); }
+      .metrics { grid-template-columns: 1fr; }
+      .metric { border-right: 0; border-bottom: 1px solid var(--line); }
+      .metric:last-child { border-bottom: 0; }
+      .nav { align-items: flex-start; flex-direction: column; justify-content: center; padding: 12px 0; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="shell nav">
+      <a class="brand" href="index.html">
+        <img src="assets/tnb-emblem-v2.png" alt="TENEBRA emblem">
+        TENEBRA
+      </a>
+      <nav>
+        <a href="#network">Network</a>
+        <a href="tenebra-dex.html">DEX</a>
+        <a href="tenebra-scan.html">Scan</a>
+        <a href="web-wallet.html">Wallet</a>
+        <a href="tenebra-create-token.html">Create Token</a>
+        <a href="tenebra-marketplace.html">NFT Marketplace</a>
+        <a href="tenebra-my-nfts.html">My NFTs</a>
+        <a href="docs/ROADMAP.html">Roadmap</a>
+        <a href="docs/CERTOaudit-mainnet-operational-addendum-2026-09-23.html">External audit</a>
+        <a href="TENEBRA-whitepaper.html">Whitepaper</a>
+        <span class="status-pill">Public mainnet</span>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="shell hero">
+      <div>
+        <div class="eyebrow">TSC-1 / TNB native network</div>
+        <h1>Private value,<br>public infrastructure.</h1>
+        <p class="lead">TENEBRA is a privacy-first blockchain research project focused on confidential transfers, bounded issuance, deterministic validation, and reproducible network operation under controlled conditions.</p>
+        <div class="cta-row">
+          <a class="button-secondary" href="tenebra-scan.html">Open scan</a>
+        </div>
+      </div>
+
+      <aside class="hero-side">
+        <div class="eyebrow">Current status</div>
+        <strong>Public mainnet</strong>
+        <p>TENEBRA is operating a permissionless public mainnet with a live node, persistent chain data, public peer access, and verified recovery and transfer confirmation.</p>
+      </aside>
+    </div>
+
+    <div class="shell metrics" id="network">
+      <div class="metric"><div class="label">Network</div><div class="value">TSC-1 <small>v3f</small></div></div>
+      <div class="metric"><div class="label">Asset</div><div class="value">TNB</div></div>
+      <div class="metric"><div class="label">Supply cap</div><div class="value">100M <small>TNB</small></div></div>
+      <div class="metric"><div class="label">Validated throughput</div><div class="value">169.19 <small>tx/s</small></div></div>
+    </div>
+
+    <section class="shell">
+      <div class="section-head">
+        <h2>Network facts</h2>
+        <p>Operational summary</p>
+      </div>
+      <div class="grid">
+        <div class="panel">
+          <h3>Seed peers</h3>
+          <div class="node-row">
+            <div>
+              <div class="node-name">seed1.tenebra-network.com</div>
+              <div class="node-address">TCP / 39453 / Ed25519 identity required</div>
+            </div>
+            <div class="state-ok">Configured</div>
+          </div>
+          <div class="node-row">
+            <div>
+              <div class="node-name">seed2.tenebra-network.com</div>
+              <div class="node-address">TCP / 39453 / Ed25519 identity required</div>
+            </div>
+            <div class="state-ok">Configured</div>
+          </div>
+          <p class="notice"><strong>Boundary:</strong> this website does not expose private keys, wallet seeds, or operational credentials.</p>
+        </div>
+
+        <div class="panel">
+          <h3>Bootstrap config</h3>
+          <div class="code">TENEBRA_MAINNET_PEERS=89.39.7.191:39454</div>
+          <button class="copy-btn" type="button" data-copy="TENEBRA_MAINNET_PEERS=89.39.7.191:39454">Copy mainnet peer</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="shell">
+      <div class="section-head">
+        <h2>Project tools</h2>
+        <p>Browse the experience</p>
+      </div>
+      <div class="cards">
+        <a class="card" href="tenebra-network.html">
+          <span class="mini">01 / Network</span>
+          <h3>Network hub</h3>
+          <p>Public landing page with protocol, supply, network status, and launch boundary messaging.</p>
+        </a>
+        <a class="card" href="tenebra-scan.html">
+          <span class="mini">02 / Scan</span>
+          <h3>Read-only explorer</h3>
+          <p>Browse blocks, search chain metadata, and verify the live public network.</p>
+        </a>
+        <a class="card" href="tenebra-marketplace.html">
+          <span class="mini">04 / Marketplace</span>
+          <h3>NFT marketplace</h3>
+          <p>Discover creator listings and connect your public TENEBRA wallet when you are ready to collect.</p>
+        </a>
+        <a class="card" href="docs/release-evidence.html">
+          <span class="mini">05 / Evidence</span>
+          <h3>Release evidence</h3>
+          <p>Published operational checks, test results, transfer confirmation, backup validation, and audit boundaries.</p>
+        </a>
+      </div>
+    </section>
+
+    <section class="shell">
+      <div class="section-head">
+        <h2>Protocol summary</h2>
+        <p>Validated implementation details</p>
+      </div>
+      <div class="facts">
+        <div class="fact"><b>Genesis hash</b><code>58ed7d7dcf4c173a25059585f1b06489a190ee8f42e2e03d5a88b69af65d0652</code></div>
+        <div class="fact"><b>Native asset</b><code>TNB / max 100,000,000</code></div>
+        <div class="fact"><b>Fee split</b><code>90% miner / 10% treasury</code></div>
+        <div class="fact"><b>Finality checkpoint</b><code>10 blocks</code></div>
+        <div class="fact"><b>Market price</b><code>Not established</code></div>
+        <div class="fact"><b>Current state</b><code>Public mainnet</code></div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="shell footer-row">
+      <span>TENEBRA / TSC-1</span>
+      <span>Network information only. Never enter a wallet seed, private key, or password.</span>
+    </div>
+  </footer>
+
+  <script>
+    document.querySelectorAll('[data-copy]').forEach(function (button) {
+      button.addEventListener('click', async function () {
+        const text = button.getAttribute('data-copy') || '';
+        try {
+          await navigator.clipboard.writeText(text);
+          const label = button.textContent;
+          button.textContent = 'Copied';
+          setTimeout(() => button.textContent = label, 1400);
+        } catch (error) {
+          button.textContent = 'Copy failed';
+          setTimeout(() => button.textContent = 'Copy seed config', 1600);
+        }
+      });
+    });
+  </script>
+</body>
+</html>

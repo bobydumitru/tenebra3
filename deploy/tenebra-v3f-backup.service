@@ -1,0 +1,6 @@
+[Unit]
+Description=TENEBRA TSC-1 v3f chain backup
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/backup-tenebra-v3f

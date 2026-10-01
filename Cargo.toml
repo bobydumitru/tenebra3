@@ -1,0 +1,38 @@
+[package]
+name = "tenebra"
+version = "0.1.0"
+edition = "2021"
+
+[features]
+default = []
+mainnet-candidate = []
+
+[[bin]]
+name = "tenebra-node"
+path = "src/bin/tenebra-node.rs"
+required-features = ["mainnet-candidate"]
+
+[dependencies]
+argon2 = "0.5"
+bulletproofs = "5"
+chacha20poly1305 = "0.10"
+curve25519-dalek = { version = "4.1", features = ["zeroize"] }
+clear_on_drop = { version = "0.2.5", default-features = false, features = ["no_cc"] }
+ed25519-dalek = "2.2"
+getrandom = { version = "0.2", features = ["js"] }
+hex = "0.4"
+merlin = "3"
+rayon = "1.11"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+sha2 = "0.10"
+zeroize = "1"
+
+[target.'cfg(not(target_arch = "wasm32"))'.dependencies]
+eframe = { version = "0.36.2", default-features = false, features = ["default_fonts", "glow", "x11"] }
+egui_extras = { version = "0.36.2", default-features = false, features = ["image"] }
+rpassword = "7"
+ureq = { version = "2.12", features = ["json"] }
+
+[dev-dependencies]
+proptest = "1"

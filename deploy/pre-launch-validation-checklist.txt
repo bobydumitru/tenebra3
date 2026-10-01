@@ -1,0 +1,52 @@
+PRE-LAUNCH VALIDATION CHECKLIST
+
+1. BUILD VALIDATION
+- [ ] cargo check --all-targets passes
+- [ ] cargo test --lib --quiet passes
+- [ ] any targeted release benchmark passes
+
+2. FUZZ / ROBUSTNESS
+- [ ] cargo-fuzz is installed
+- [ ] fuzz smoke run passes for decode targets
+- [ ] no crash or panic in short fuzz run
+- [ ] fuzz campaign is reviewed before public launch
+
+3. CONCURRENCY / PEER TESTING
+- [ ] peer sync with localhost passes under repeated runs
+- [ ] block append and reorg logic pass repeatedly
+- [ ] connection limits and rate limits are verified
+- [ ] no race condition is observed under stress runs
+
+4. CRASH / RESTART / REORG TESTS
+- [ ] node startup after clean shutdown works
+- [ ] node restart after partial block write works
+- [ ] fork-handling logic passes on a heavier chain
+- [ ] archive/fork candidate behavior is correct
+- [ ] finalized height protection is respected
+
+5. NETWORK / DEPLOYMENT
+- [ ] correct host and port binding
+- [ ] allowlist peer keys configured
+- [ ] seed list configured
+- [ ] block directory exists and is writable
+- [ ] firewall rules are locked down
+- [ ] service manager or watchdog is configured
+
+6. PUBLIC WEBSITE BOUNDARY
+- [ ] public site says controlled validation or preview
+- [ ] no public mainnet claim
+- [ ] no public wallet claim
+- [ ] no production asset claim
+- [ ] no live market price claim
+- [ ] no private keys or seed phrases are exposed
+
+7. LAUNCH GATE
+- [ ] smoke tests passed
+- [ ] stress tests passed
+- [ ] crash/restart tests passed
+- [ ] rollback plan exists
+- [ ] logs and backups are enabled
+- [ ] launch status is described accurately
+
+IMPORTANT:
+This is a validation launch, not a public mainnet launch and not a live asset claim.

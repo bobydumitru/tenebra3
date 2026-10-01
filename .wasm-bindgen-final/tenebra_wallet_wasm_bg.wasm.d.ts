@@ -1,0 +1,31 @@
+/* tslint:disable */
+/* eslint-disable */
+export const memory: WebAssembly.Memory;
+export const wallet_address: (a: number, b: number) => number;
+export const wallet_alloc: (a: number) => number;
+export const wallet_free: (a: number, b: number) => void;
+export const wallet_generate_seed: (a: number) => number;
+export const wallet_mnemonic_to_seed: (a: number, b: number, c: number) => number;
+export const wallet_native_file_address: (a: number, b: number, c: number, d: number) => number;
+export const wallet_native_file_balance: (a: number, b: number, c: number, d: number, e: number, f: number) => number;
+export const wallet_seed_balance: (a: number, b: number, c: number, d: number) => number;
+export const wallet_native_file_history: (a: number, b: number, c: number, d: number, e: number, f: number) => number;
+export const wallet_native_file_rewards: (a: number, b: number, c: number, d: number, e: number, f: number) => number;
+export const wallet_seed_rewards: (a: number, b: number, c: number, d: number) => number;
+export const wallet_native_file_seed: (a: number, b: number, c: number, d: number) => number;
+export const wallet_native_file_sign_dex_create_pool: (a: number, b: number, c: number, d: number, e: number, f: bigint, g: bigint, h: bigint, i: number) => number;
+export const wallet_native_file_sign_dex_remove_liquidity: (a: number, b: number, c: number, d: number, e: number, f: bigint, g: number) => number;
+export const wallet_native_file_sign_dex_swap: (a: number, b: number, c: number, d: number, e: number, f: bigint, g: bigint, h: bigint, i: number) => number;
+export const wallet_native_file_sign_message: (a: number, b: number, c: number, d: number, e: number, f: number) => number;
+export const wallet_native_file_sign_mining_challenge: (a: number, b: number, c: number, d: number, e: number, f: number) => number;
+export const wallet_native_file_sign_transfer: (a: number, b: number, c: number, d: number, e: number, f: number, g: number, h: bigint, i: bigint, j: number) => number;
+export const wallet_seed_sign_transfer: (a: number, b: number, c: number, d: number, e: number, f: bigint, g: bigint, h: number) => number;
+export const wallet_seed_history_v2: (a: number, b: number, c: number, d: number) => number;
+export const wallet_seed_sign_asset_create: (a: number, b: number, c: number, d: number, e: number, f: number, g: number, h: number, i: bigint, j: bigint, k: number) => number;
+export const wallet_seed_sign_asset_transfer: (a: number, b: number, c: number, d: number, e: bigint, f: number) => number;
+export const wallet_seed_sign_mining_challenge: (a: number, b: number, c: number, d: number) => number;
+export const wallet_seed_to_mnemonic: (a: number, b: number) => number;
+export const __wbindgen_exn_store: (a: number) => void;
+export const __externref_table_alloc: () => number;
+export const __wbindgen_externrefs: WebAssembly.Table;
+export const __wbindgen_start: () => void;

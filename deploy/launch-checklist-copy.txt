@@ -1,0 +1,53 @@
+TENEBRA PUBLIC VALIDATION CHECKLIST
+
+1. CODE-SIDE VALIDATION
+- [ ] cargo check --all-targets passes
+- [ ] cargo test --lib --quiet passes
+- [ ] node starts with: cargo run --bin tsc1-devnet-v3 -- serve 0.0.0.0:39453
+- [ ] status command works: cargo run --bin tsc1-devnet-v3 -- status
+- [ ] no compile errors and no failing library tests
+
+2. NODE CONFIGURATION
+- [ ] TSC1_DEVNET_V3_PEER_KEY is set to a private 32-byte key
+- [ ] TSC1_DEVNET_V3_PEER_KEYS contains only trusted public keys
+- [ ] TSC1_DEVNET_V3_SEEDS contains validated bootstrap addresses
+- [ ] TSC1_DEVNET_V3_PEERS includes only trusted peers
+- [ ] TSC1_DEVNET_V3_BLOCKS_DIR is writable and exists
+- [ ] no private keys stored in the repo
+
+3. NETWORK VALIDATION
+- [ ] the node binds to the correct host and port
+- [ ] peer authentication passes for allowlisted nodes
+- [ ] static peers connect successfully
+- [ ] status output returns height and tip hash
+- [ ] block relay and sync path are tested locally
+
+4. HEALTH CHECKS
+- [ ] local port check succeeds on 39453
+- [ ] node remains alive after startup
+- [ ] no repeated crash loops
+- [ ] logs are clean and contain no critical errors
+- [ ] the health-check script is run before launch
+
+5. SECURITY / INFRA
+- [ ] firewall allows only the required ports
+- [ ] server is hardened and patched
+- [ ] service management / backup exists
+- [ ] no secrets are stored in public files
+
+6. PUBLIC-SIDE BOUNDARY
+- [ ] website states controlled validation or preview
+- [ ] no public mainnet claim
+- [ ] no public wallet claim
+- [ ] no public asset launch claim
+- [ ] no live market price claim
+- [ ] no seed or private key shown on public pages
+
+7. LAUNCH GATE
+- [ ] all above boxes are checked
+- [ ] rollback plan exists
+- [ ] node and site are tested together
+- [ ] launch is described only as a controlled validation launch
+
+8. IMPORTANT
+This is a validation launch, not a public mainnet launch and not a live asset claim.

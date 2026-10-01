@@ -1,0 +1,35 @@
+[package]
+name = "tenebra-fuzz"
+version = "0.0.0"
+publish = false
+edition = "2024"
+
+[workspace]
+
+[package.metadata]
+cargo-fuzz = true
+
+[dependencies]
+libfuzzer-sys = "0.4"
+tenebra = { path = ".." }
+
+[[bin]]
+name = "transaction_decode"
+path = "fuzz_targets/transaction_decode.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "block_decode"
+path = "fuzz_targets/block_decode.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "authorization_decode"
+path = "fuzz_targets/authorization_decode.rs"
+test = false
+doc = false
+bench = false

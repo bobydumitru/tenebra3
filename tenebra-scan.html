@@ -1,0 +1,413 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0d1415">
+  <title>TENEBRA Scan | TSC-1 Explorer</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #0b1112;
+      --panel: #151f1d;
+      --panel-2: #1a2a29;
+      --line: #2c3b39;
+      --ink: #edf3ef;
+      --muted: #99a9a3;
+      --gold: #d4a85f;
+      --mint: #84d6b4;
+      --red: #ee8d73;
+      font-family: Arial, sans-serif;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: linear-gradient(145deg, #0b1112 0%, #111c1d 56%, #171513 100%);
+      min-height: 100vh;
+    }
+    a { color: var(--gold); }
+    .shell { width: min(1160px, calc(100% - 34px)); margin: 0 auto; }
+    header { border-bottom: 1px solid var(--line); }
+    .nav { min-height: 74px; display: flex; align-items: center; justify-content: space-between; gap: 18px; }
+    .brand { color: var(--ink); text-decoration: none; display: inline-flex; align-items: center; gap: 14px; letter-spacing: .08em; font: 20px Georgia, serif; }
+    .brand img { width: 48px; height: 48px; border-radius: 50%; background: var(--gold); padding: 4px; object-fit: contain; box-shadow: 0 0 0 1px rgba(212,168,95,.5), 0 0 22px rgba(212,168,95,.22); }
+    nav { display: flex; align-items: center; gap: 20px; font-size: 13px; }
+    nav a { color: var(--muted); text-decoration: none; }
+    nav a:hover { color: var(--ink); }
+    .status-pill { color: var(--mint); }
+    .hero { padding: 72px 0 40px; }
+    .eyebrow { color: var(--gold); font-size: 11px; letter-spacing: .18em; text-transform: uppercase; }
+    h1 { margin: 18px 0 16px; font: 400 clamp(42px, 6vw, 72px)/.96 Georgia, serif; letter-spacing: -.04em; }
+    .lead { max-width: 620px; color: var(--muted); line-height: 1.6; font-size: 16px; }
+    .search-wrap { display: flex; gap: 12px; max-width: 860px; margin-top: 26px; }
+    input { flex: 1; min-width: 0; border: 1px solid var(--line); background: rgba(10, 15, 15, .9); color: var(--ink); padding: 16px 18px; font: 14px Consolas, monospace; }
+    input:focus { outline: none; border-color: var(--gold); }
+    button { border: 1px solid var(--gold); background: var(--gold); color: #18140f; padding: 0 20px; font-weight: 700; cursor: pointer; }
+    .notice { margin-top: 18px; border-left: 3px solid var(--gold); padding: 11px 14px; color: var(--muted); font-size: 13px; line-height: 1.6; }
+    .notice.error { border-color: var(--red); }
+    .metrics { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); border: 1px solid var(--line); background: var(--line); gap: 1px; }
+    .metric { background: var(--panel); padding: 20px; }
+    .metric b { display: block; color: var(--muted); font-size: 10px; letter-spacing: .12em; text-transform: uppercase; margin-bottom: 10px; }
+    .metric strong { font: 24px Georgia, serif; font-weight: 400; }
+    section { padding: 52px 0; }
+    .section-head { display: flex; justify-content: space-between; align-items: end; gap: 18px; margin-bottom: 18px; }
+    h2 { margin: 0; font: 400 30px Georgia, serif; }
+    .section-head span { color: var(--muted); font-size: 12px; }
+    .grid { display: grid; grid-template-columns: 1.25fr .75fr; gap: 18px; }
+    .panel { border: 1px solid var(--line); background: rgba(21,30,30,.85); padding: 22px; }
+    .panel h3 { margin: 0 0 16px; font: 400 20px Georgia, serif; }
+    .row { border-top: 1px solid var(--line); display: grid; grid-template-columns: 1fr auto; gap: 18px; padding: 15px 0; align-items: center; }
+    .row:first-of-type { border-top: 0; }
+    .hash { color: var(--mint); font: 12px Consolas, monospace; word-break: break-all; }
+    .meta { color: var(--muted); font-size: 12px; margin-top: 5px; }
+    .amount { text-align: right; font-size: 13px; }
+    .block-list { display: grid; }
+    .latest-block-list {
+      max-height: 150px;
+      overflow-y: auto;
+      overscroll-behavior: contain;
+      padding-right: 8px;
+      scrollbar-gutter: stable;
+      scrollbar-width: thin;
+      scrollbar-color: var(--line) transparent;
+    }
+    .latest-block-list::-webkit-scrollbar { width: 6px; }
+    .latest-block-list::-webkit-scrollbar-thumb { background: var(--line); }
+    .block-row { display: grid; grid-template-columns: minmax(100px, .45fr) minmax(0, 1fr) auto; align-items: center; gap: 12px; border-top: 1px solid var(--line); padding: 13px 0; }
+    .block-row:first-child { border-top: 0; }
+    .block-height { color: var(--ink); font: 15px Georgia, serif; white-space: nowrap; }
+    .block-hash { color: var(--muted); font: 11px Consolas, monospace; overflow: hidden; text-overflow: ellipsis; }
+    .block-activity { color: var(--mint); font-size: 11px; text-align: right; }
+    .block-details { color: var(--muted); font: 11px/1.7 Consolas, monospace; overflow-wrap: anywhere; padding: 0 0 12px; }
+    .asset-list { max-height: 360px; overflow-y: auto; padding: 2px 8px 2px 2px; scrollbar-width: thin; scrollbar-color: var(--gold) transparent; overscroll-behavior: contain; }
+    .asset-list::-webkit-scrollbar { width: 6px; }
+    .asset-list::-webkit-scrollbar-thumb { background: var(--gold); }
+    .asset-row { display: grid; grid-template-columns: 88px minmax(0, 1fr); gap: 13px; align-items: center; border-top: 1px solid var(--line); padding: 9px 0; min-height: 112px; }
+    .asset-row:first-child { border-top: 0; }
+    .asset-art { width: 88px; height: 88px; border: 1px solid var(--line); border-radius: 4px; background: var(--panel-2); display: grid; place-items: center; overflow: hidden; }
+    .asset-art img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .asset-art-placeholder { padding: 8px; color: var(--muted); font-size: 10px; line-height: 1.35; text-align: center; }
+    .asset-name { color: var(--ink); font: 17px Georgia, serif; overflow-wrap: anywhere; }
+    .asset-details { color: var(--muted); font-size: 11px; line-height: 1.55; margin-top: 5px; overflow-wrap: anywhere; }
+    .status-ok { color: var(--mint); font-size: 11px; }
+    .facts { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--line); border: 1px solid var(--line); }
+    .fact { background: var(--panel); padding: 18px; }
+    .fact b { display: block; color: var(--muted); font-size: 10px; letter-spacing: .12em; text-transform: uppercase; margin-bottom: 8px; }
+    .fact code { color: var(--ink); font: 12px Consolas, monospace; word-break: break-word; }
+    footer { border-top: 1px solid var(--line); padding: 28px 0 36px; color: var(--muted); font-size: 12px; }
+    @media (max-width: 750px) {
+      .shell { width: min(100% - 26px, 700px); }
+      nav a:not(:last-child) { display: none; }
+      .search-wrap { flex-direction: column; }
+      .search-wrap button { min-height: 48px; }
+      .metrics { grid-template-columns: 1fr 1fr; }
+      .grid { grid-template-columns: 1fr; }
+      .row { grid-template-columns: 1fr; }
+      .amount { text-align: left; }
+      .section-head { flex-direction: column; align-items: start; }
+      .asset-list { max-height: 330px; }
+      .asset-row { grid-template-columns: 72px minmax(0, 1fr); min-height: 94px; gap: 10px; }
+      .asset-art { width: 72px; height: 72px; }
+      .brand img { width: 42px; height: 42px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="shell nav">
+      <a class="brand" href="tenebra-network.html"><img src="assets/tnb-emblem-v2.png" alt="TENEBRA emblem"> TENEBRA SCAN</a>
+      <nav>
+        <a href="tenebra-network.html">Network</a>
+        <a href="docs/TENEBRA-whitepaper.html">Whitepaper</a>
+        <a href="docs/internal-audit-2026-09-20.html">Audit</a>
+        <span class="status-pill">● Public mainnet</span>
+      </nav>
+    </div>
+  </header>
+
+  <main class="shell">
+    <div class="hero">
+      <div>
+        <div class="eyebrow">TSC-1 / public chain index</div>
+        <h1>Inspect the chain.<br>Verify the state.</h1>
+        <p class="lead">The TENEBRA scan interface is intended for read-only validation of chain metadata and public transaction data. It must never be used to pass wallet seeds, private keys, or password material.</p>
+        <form class="search-wrap" id="search-form">
+          <input id="search-input" type="text" placeholder="Search block height, block hash or transaction ID">
+          <button type="submit">Search</button>
+        </form>
+        <div class="notice" id="search-result">Connecting to the live explorer API...</div>
+      </div>
+    </div>
+
+    <div class="metrics">
+      <div class="metric"><b>Network</b><strong id="network-name">Checking...</strong></div>
+      <div class="metric"><b>Asset</b><strong>TNB</strong></div>
+      <div class="metric"><b>Height</b><strong id="chain-height">Checking...</strong></div>
+      <div class="metric"><b>Tip</b><strong id="chain-tip">Checking...</strong></div>
+          <div class="metric"><b>Confirmed TNB tx</b><strong id="confirmed-count">Checking...</strong></div>
+      <div class="metric"><b>API</b><strong id="api-status">Checking...</strong></div>
+    </div>
+
+    <section>
+      <div class="section-head">
+        <h2>Latest blocks</h2>
+        <span id="chain-status">Connecting to validated node API</span>
+      </div>
+      <div class="grid">
+        <div class="panel">
+          <h3>Chain activity</h3>
+          <div id="latest-blocks" class="muted">Loading blocks from the live API...</div>
+          <h3>On-chain assets</h3>
+          <div id="chain-assets" class="muted">Loading asset metadata from the live API...</div>
+        </div>
+
+        <div class="panel">
+          <h3>Network facts</h3>
+          <div class="row">
+            <div><div class="meta">Tip hash</div><div id="facts-tip" class="hash">Loading...</div></div>
+          </div>
+          <div class="row">
+            <div><div class="meta">Pending transactions</div><div id="facts-pending" class="hash">Loading...</div></div>
+          </div>
+          <div class="row">
+            <div><div class="meta">Checked at</div><div id="facts-checked" class="hash">Loading...</div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section><div class="section-head"><h2>Explorer scope</h2><span>Live data only</span></div><div class="panel"><p class="muted">This page displays values returned by the public Mainnet API. Search supports block height, block hash and transaction ID after chain indexing. Address lookup is unavailable because TNB transaction outputs are private.</p></div></section>
+
+  </main>
+
+  <footer>
+    <div class="shell">TENEBRA SCAN · read-only network explorer · never enter a wallet seed or password here.</div>
+  </footer>
+
+  <script>
+    var apiStatus = document.getElementById('api-status');
+    var chainStatus = document.getElementById('chain-status');
+    var searchResult = document.getElementById('search-result');
+    var searchSequence = 0;
+    function resolveApiBase() {
+      if (location.protocol === 'file:') return 'http://127.0.0.1:39455';
+      if (location.hostname === 'localhost' || location.hostname === '127.0.0.1') return 'http://127.0.0.1:39455';
+      return location.origin || 'https://tenebra-network.com';
+    }
+    function resolveApiUrl(url) {
+      if (/^https?:\/\//i.test(url)) return url;
+      var base = resolveApiBase().replace(/\/$/, '');
+      return base + (url.indexOf('/') === 0 ? url : '/' + url);
+    }
+    async function fetchWithFallback(url, options) {
+      var candidates = [resolveApiBase(), 'https://tenebra-network.com'];
+      var lastError = null;
+      for (var index = 0; index < candidates.length; index++) {
+        var base = candidates[index].replace(/\/$/, '');
+        var target = base + (url.indexOf('/') === 0 ? url : '/' + url);
+        try {
+          var response = await fetch(target, options);
+          if (response.ok) return response;
+        } catch (error) {
+          lastError = error;
+        }
+      }
+      throw lastError || Error('Unknown fetch failure');
+    }
+    function loadLatestBlocks() {
+      return fetchWithFallback('/api/blocks/latest?limit=10', { cache: 'no-store' }).then(function (response) {
+        if (!response.ok) throw Error('HTTP ' + response.status);
+        return response.json();
+      }).then(function (page) {
+        if (!Array.isArray(page.activity) || page.activity.length === 0) throw Error('No block activity returned');
+        var list = document.createElement('div');
+        list.className = 'block-list latest-block-list';
+        page.activity.slice().reverse().forEach(function (block) {
+          var row = document.createElement('div');
+          row.className = 'block-row';
+          var height = document.createElement('span');
+          height.className = 'block-height';
+          height.textContent = 'Block #' + block.height;
+          var hash = document.createElement('span');
+          hash.className = 'block-hash';
+          hash.textContent = block.hash;
+          hash.title = block.hash;
+          var activity = document.createElement('span');
+          activity.className = 'block-activity';
+          var tnbTransferCount = block.transactions.length;
+          activity.textContent = tnbTransferCount + (tnbTransferCount === 1 ? ' TNB transfer' : ' TNB transfers') + ' · ' + block.asset_operations.length + ' asset ops · ' + block.dex_operations + ' DEX';
+          row.append(height, hash, activity);
+          list.appendChild(row);
+          var details = [];
+          block.transactions.forEach(function (transaction) {
+            details.push('TNB transfer included · amount private · ' + transaction.confirmations + '/10 finality confirmations · ' + transaction.txid);
+          });
+          block.asset_operations.forEach(function (operation) {
+            var description = operation.kind === 'create' && operation.max_supply === 1
+              ? '1-of-1 asset created'
+              : 'Asset ' + operation.kind;
+            if (operation.name) description += ': ' + operation.name + ' (' + operation.symbol + ')';
+            if (operation.amount !== undefined) description += ' · amount ' + operation.amount;
+            if (operation.max_supply !== undefined) description += ' / ' + operation.max_supply;
+            description += ' · ' + (operation.included ? 'included; finalizing' : 'pending') + ' ' + operation.confirmations + '/10 finality confirmations · asset ' + operation.asset_id + ' · tx ' + operation.txid;
+            details.push(description);
+          });
+          if (details.length === 0 && block.dex_operations === 0) details.push('No transactions in this block.');
+          if (block.dex_operations > 0) details.push(block.dex_operations + ' DEX operations');
+          var detailRow = document.createElement('div');
+          detailRow.className = 'block-details';
+          detailRow.textContent = details.join('\n');
+          list.appendChild(detailRow);
+        });
+        var target = document.getElementById('latest-blocks');
+        target.classList.remove('muted');
+        target.replaceChildren(list);
+      }).catch(function (error) {
+        document.getElementById('latest-blocks').textContent = 'Block activity unavailable: ' + error.message;
+      });
+    }
+    var founderArtworkByName = {
+      'the first spark': 'assets/founder-artwork/01-the-first-spark.jpg',
+      'open door': 'assets/founder-artwork/02-open-door.jpg',
+      'the witness': 'assets/founder-artwork/03-the-witness.jpg',
+      'quiet key': 'assets/founder-artwork/04-quiet-key.jpg',
+      'equal weight': 'assets/founder-artwork/05-equal-weight.jpg',
+      'signal through storm': 'assets/founder-artwork/07-signal-through-storm.jpg',
+      'proof of patience': 'assets/founder-artwork/08-proof-of-patience.jpg',
+      'the common table': 'assets/founder-artwork/09-the-common-table.jpg',
+      'north star protocol': 'assets/founder-artwork/10-north-star-protocol.jpg',
+      'the unbroken line': 'assets/founder-artwork/11-the-unbroken-line.jpg',
+      'after the gate': 'assets/founder-artwork/12-after-the-gate.jpg',
+      'deep current': 'assets/founder-artwork/13-deep-current.jpg',
+      'a thousand hands': 'assets/founder-artwork/14-a-thousand-hands.jpg',
+      'the honest mirror': 'assets/founder-artwork/15-the-honest-mirror.jpg',
+      'keeper of the flame': 'assets/founder-artwork/16-keeper-of-the-flame.jpg',
+      'the last boundary': 'assets/founder-artwork/17-the-last-boundary.jpg',
+      'blue hour consensus': 'assets/founder-artwork/18-blue-hour-consensus.jpg',
+      'the future remembers': 'assets/founder-artwork/19-the-future-remembers.jpg',
+      'tenebra: the meaning': 'assets/founder-artwork/20-tenebra-the-meaning.jpg'
+    };
+    function assetArtworkSource(asset) {
+      return founderArtworkByName[String(asset.name || '').trim().toLowerCase()] || '';
+    }
+    async function loadChainAssets() {
+      var target = document.getElementById('chain-assets');
+      try {
+        for (var attempt = 0; attempt < 3600; attempt++) {
+          var response = await fetchWithFallback('/api/assets', { cache: 'no-store' });
+          if (!response.ok) throw Error('HTTP ' + response.status);
+          var data = await response.json();
+          if (data.indexing) {
+            target.dataset.indexedHeight = String(data.indexed_height);
+            target.textContent = 'Indexing on-chain assets: block ' + data.indexed_height + ' of ' + data.target_height + (data.error ? ' · retrying after ' + data.error : '');
+            await new Promise(function (resolve) { setTimeout(resolve, 3000); });
+            continue;
+          }
+          if (data.error) throw Error(data.error);
+          var assets = Array.isArray(data.assets) ? data.assets : [];
+          if (assets.length === 0) {
+            target.textContent = 'No on-chain assets returned through block ' + data.indexed_height + '.';
+            return;
+          }
+          var list = document.createElement('div');
+          list.className = 'asset-list';
+          assets.forEach(function (asset) {
+            var row = document.createElement('div');
+            row.className = 'asset-row';
+            var art = document.createElement('div');
+            art.className = 'asset-art';
+            var artwork = assetArtworkSource(asset);
+            if (artwork) {
+              var image = document.createElement('img');
+              image.src = artwork;
+              image.alt = (asset.name || 'NFT') + ' artwork';
+              image.loading = 'lazy';
+              art.appendChild(image);
+            } else {
+              var placeholder = document.createElement('div');
+              placeholder.className = 'asset-art-placeholder';
+              placeholder.textContent = 'Artwork not linked';
+              art.appendChild(placeholder);
+            }
+            var content = document.createElement('div');
+            var name = document.createElement('div');
+            name.className = 'asset-name';
+            name.textContent = (asset.name || 'Unnamed asset') + ' (' + (asset.symbol || '—') + ')';
+            var details = document.createElement('div');
+            details.className = 'asset-details';
+            details.textContent = 'Asset ID: ' + asset.asset_id + ' · Minted: ' + asset.minted + ' / ' + asset.max_supply + ' · Decimals: ' + asset.decimals + ' · Included in block #' + asset.created_height + ' · Finality: ' + asset.confirmations + '/10 confirmations · Creation txid: ' + asset.creation_txid;
+            content.append(name, details);
+            row.append(art, content);
+            list.appendChild(row);
+          });
+          target.classList.remove('muted');
+          target.replaceChildren(list);
+          return;
+        }
+        target.textContent = 'Asset index is still syncing through block ' + target.dataset.indexedHeight + '. Reload to check progress.';
+      } catch (error) {
+        target.textContent = 'Asset metadata unavailable: ' + error.message;
+      }
+    }
+    async function searchExplorer(value, sequence) {
+      if (sequence !== searchSequence) return;
+      try {
+        var response = await fetchWithFallback('/api/search?q=' + encodeURIComponent(value), { cache: 'no-store' });
+        var result = await response.json();
+        if (result.available === false) {
+          searchResult.textContent = result.message;
+          return;
+        }
+        if (result.indexing) {
+          searchResult.textContent = 'Search index: block ' + result.indexed_height + ' of ' + result.target_height + (result.error ? ' · retrying after ' + result.error : '');
+          setTimeout(function () { searchExplorer(value, sequence); }, 3000);
+          return;
+        }
+        if (!result.found) {
+          searchResult.textContent = result.message || result.error || 'No matching block or transaction was found.';
+          return;
+        }
+        searchResult.textContent = (result.kind === 'block' ? 'Block found' : 'Transaction found') + ' · indexed through block ' + result.indexed_height + '\n' + JSON.stringify(result, null, 2);
+        searchResult.classList.remove('error');
+      } catch (error) {
+        if (sequence === searchSequence) {
+          searchResult.textContent = 'Search unavailable: ' + error.message;
+          searchResult.classList.add('error');
+        }
+      }
+    }
+    fetchWithFallback('/api/status', { cache: 'no-store' }).then(function (response) {
+      if (!response.ok) throw Error('HTTP ' + response.status);
+      return response.json();
+    }).then(function (status) {
+      apiStatus.textContent = 'Online';
+      document.getElementById('network-name').textContent = status.network || 'TSC-1 mainnet';
+      document.getElementById('chain-height').textContent = String(status.height);
+      document.getElementById('chain-tip').textContent = String(status.tip).slice(0, 12) + '...';
+      document.getElementById('confirmed-count').textContent = String(status.confirmed_transactions);
+      document.getElementById('facts-tip').textContent = status.tip || 'Unavailable';
+      document.getElementById('facts-pending').textContent = String(status.pending_transactions);
+      document.getElementById('facts-checked').textContent = status.checked_at ? new Date(status.checked_at * 1000).toISOString() : 'Unavailable';
+      chainStatus.textContent = 'Height ' + status.height + ' · ' + status.confirmed_transactions + ' confirmed TNB transactions';
+      searchResult.textContent = 'Live API connected. Block and transaction search is available while the chain index builds; private address lookup is not supported.';
+      searchResult.classList.remove('error');
+    }).catch(function (error) {
+      apiStatus.textContent = 'Offline';
+      chainStatus.textContent = 'Validated node API unavailable';
+      searchResult.textContent = 'Live explorer API unavailable: ' + error.message;
+      searchResult.classList.add('error');
+    });
+    loadLatestBlocks();
+    loadChainAssets();
+    document.getElementById('search-form').addEventListener('submit', function (event) {
+      event.preventDefault();
+      var value = document.getElementById('search-input').value.trim();
+      if (!value) { searchResult.textContent = 'Enter a block height, block hash or transaction ID.'; return; }
+      var sequence = ++searchSequence;
+      searchResult.textContent = 'Searching the validated chain index...';
+      searchExplorer(value, sequence);
+    });
+  </script>
+</body>
+</html>

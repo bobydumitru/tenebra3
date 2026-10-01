@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 900" role="img" aria-labelledby="title desc">
+  <title id="title">CERTOaudit external security assessment emblem</title>
+  <desc id="desc">A navy and copper seal stating CERTOaudit, external security assessment, and operational release status.</desc>
+  <defs>
+    <path id="topArc" d="M 150 450 A 300 300 0 0 1 750 450" />
+    <path id="bottomArc" d="M 750 450 A 300 300 0 0 1 150 450" />
+  </defs>
+  <circle cx="450" cy="450" r="424" fill="#0b1d2a" stroke="#c88a4a" stroke-width="16" />
+  <circle cx="450" cy="450" r="365" fill="none" stroke="#e5c08b" stroke-width="3" stroke-dasharray="2 18" />
+  <circle cx="450" cy="450" r="286" fill="#f4efe5" stroke="#c88a4a" stroke-width="10" />
+  <text fill="#f4efe5" font-family="Georgia, serif" font-size="62" font-weight="700" letter-spacing="8">
+    <textPath href="#topArc" startOffset="50%" text-anchor="middle">CERTOaudit</textPath>
+  </text>
+  <text fill="#e5c08b" font-family="Arial, sans-serif" font-size="25" font-weight="700" letter-spacing="4">
+    <textPath href="#bottomArc" startOffset="50%" text-anchor="middle">EXTERNAL SECURITY ASSESSMENT</textPath>
+  </text>
+  <path d="M450 255 516 286 575 334 569 458c-8 82-58 139-119 174-61-35-111-92-119-174l-6-124 59-48z" fill="#0b1d2a" stroke="#c88a4a" stroke-width="8" />
+  <path d="m390 405 43 43 82-96" fill="none" stroke="#e5c08b" stroke-width="22" stroke-linecap="square" stroke-linejoin="miter" />
+  <text x="450" y="635" fill="#0b1d2a" font-family="Arial, sans-serif" font-size="38" font-weight="700" letter-spacing="6" text-anchor="middle">OPERATIONAL</text>
+  <text x="450" y="680" fill="#0b1d2a" font-family="Arial, sans-serif" font-size="17" letter-spacing="2" text-anchor="middle">RELEASE EVIDENCE RECORDED</text>
+</svg>
