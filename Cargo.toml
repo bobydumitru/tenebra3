@@ -13,7 +13,7 @@ path = "src/bin/tenebra-node.rs"
 required-features = ["mainnet-candidate"]
 
 [dependencies]
-argon2 = "0.5"
+argon2 = "0.6"
 bulletproofs = "5"
 chacha20poly1305 = "0.10"
 curve25519-dalek = { version = "4.1", features = ["zeroize"] }
